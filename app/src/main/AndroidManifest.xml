@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.aidm">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AIDM"
+        tools:targetApi="31">
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RouteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportIncidentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ShelterListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ShelterDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FirstAidActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FirstAidActivity"
+            android:exported="false"
+            tools:ignore="DuplicateActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- Add your other activities here. Ensure the class files exist. -->
+        <!-- Example: <activity android:name=".YourOtherActivity" android:exported="false" /> -->
+        <activity
+            android:name=".Loading"
+            android:exported="false" />
+        <activity
+            android:name=".AnnouncementsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TopBarDemoActivity"
+            android:exported="false" />
+        <!--
+            IMPORTANT: If 'Theme', 'Models', 'Routes', or 'AndroidManifest'
+            are NOT actual Activity classes (i.e., .kt or .java files extending Activity),
+            DELETE these lines. Declaring non-activities here WILL cause errors.
+        -->
+        <!--
+        <activity android:name=".Theme" android:exported="false" />
+        <activity android:name=".Models" android:exported="false" />
+        <activity android:name=".Routes" android:exported="false" />
+        <activity android:name=".AndroidManifest" android:exported="false" />
+        -->
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAGM93FGdxip_ijWET7BRUTX02hE95TTPo" />
+    </application>
+
+</manifest>
