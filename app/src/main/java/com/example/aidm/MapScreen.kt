@@ -1,38 +1,57 @@
 package com.example.aidm
 
-import androidx.activity.ComponentActivity
-import android.os.Bundle
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.*
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
-@OptIn(ExperimentalPermissionsApi::class)
+/**
+ * A full-screen composable that displays a Google Map.
+ *
+ * @param initialUserLocation The initial geographical point to center the map on.
+ * @param onMapReady A callback that is invoked when the map is fully loaded and ready to be interacted with.
+ */
 @Composable
-fun MapScreen() {
-    val fineLoc = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
-    LaunchedEffect(Unit) { if (!fineLoc.status.isGranted) fineLoc.launchPermissionRequest() }
-
-    val mumbai = LatLng(19.0760, 72.8777)
+fun MapScreen(
+    initialUserLocation: LatLng,
+    onMapReady: (GoogleMap) -> Unit // Callback to signal when the map is loaded
+) {
+    // A state object that can be used to control the camera position of the map
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(mumbai, 10f)
+        position = CameraPosition.fromLatLngZoom(initialUserLocation, 14f) // Zoom level 14 is good for city views
     }
 
+    // The main GoogleMap composable
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
-        properties = MapProperties(isMyLocationEnabled = fineLoc.status.isGranted),
-        uiSettings = MapUiSettings(zoomControlsEnabled = true)
+        onMapLoaded = {
+            // This block is called when the map tiles have finished loading.
+            // It's a good place to do any initial setup.
+        }
     ) {
-        // Mock hazards
-        Marker(state = MarkerState(LatLng(19.09, 72.88)), title = "Flooded Area")
-        Marker(state = MarkerState(LatLng(19.2, 72.98)), title = "Road Blocked")
-        // Mock safe zones
-        Marker(state = MarkerState(LatLng(19.12, 72.86)), title = "Shelter: City Hall")
+        // You can add markers, polylines, etc., inside this block.
+
+        // Add a marker for the user's initial location.
+        Marker(
+            state = MarkerState(position = initialUserLocation),
+            title = "Your Location",
+            snippet = "This is your starting point"
+        )
+
+        // TODO: Add more markers for incidents, shelters, etc., by fetching from a ViewModel.
     }
+
+    // LaunchedEffect can be used to react to events.
+    // While the onMapReady callback from the GoogleMap composable is often sufficient,
+    // this shows another way to interact once the map is available.
+    // For this use case, we'll keep it simple and rely on the UI.
+    // The `onMapReady` parameter passed into this function is for the caller (AppNavigation)
+    // if it needs to know the map is ready.
 }

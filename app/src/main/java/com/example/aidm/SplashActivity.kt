@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.aidm.ui.theme.AIDMTheme // Assuming your theme is here
+import com.example.aidm.AIDMTheme // Assuming your theme is here
 import kotlinx.coroutines.delay
 
 @SuppressLint("CustomSplashScreen") // Required if not using the Android 12+ Splash Screen API for the main launcher

@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">AIDM</string>
+    <string name="app_name">AIDM</string> <!-- Or your actual app name -->
+
+    <!-- Add these if they are missing -->
+    <string name="title_activity_report_incident">Report Incident</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_map">Map</string>
+
 </resources>

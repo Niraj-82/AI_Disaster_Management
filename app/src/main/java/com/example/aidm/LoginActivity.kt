@@ -5,12 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.launch
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,20 +14,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.semantics.error
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.aidm.ui.theme.AIDMTheme // Assuming your theme is here
-import kotlinx.coroutines.delay // For simulating login delay
+import com.example.aidm.AIDMTheme // Ensure this is your correct theme import
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AIDMTheme { // Replace AIDMTheme with your actual theme
+            AIDMTheme {
                 LoginScreen(
                     onLoginSuccess = {
                         // Navigate to your main app screen (e.g., MainActivity)
@@ -45,73 +42,78 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
-@androidx.compose.runtime.Composable
+@Composable
 fun LoginScreen(onLoginSuccess: () -> Unit) {
-    var email by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-    var password by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-    var isLoading by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-    var loginError by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+    var loginError by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope() // Use rememberCoroutineScope for Composable-tied coroutines
 
-    // Simulate login logic
+    // --- Simulated Login Logic ---
+    // In a real app, this would be in a ViewModel and interact with a Repository/Backend.
     suspend fun performLogin(emailInput: String, passwordInput: String): Boolean {
         isLoading = true
         loginError = null
         delay(1500) // Simulate network delay
+
         // ** IMPORTANT: Replace this with your actual authentication logic **
-        // Example: Call your ViewModel/Repository to authenticate with a backend
         return if (emailInput == "user@example.com" && passwordInput == "password123") {
-            isLoading = false
+            // Simulate successful login
             true
         } else {
-            isLoading = false
+            // Simulate failed login
             loginError = "Invalid email or password."
             false
+        }.also {
+            isLoading = false // Ensure isLoading is set to false in all paths
         }
     }
+    // --- End of Simulated Login Logic ---
 
-    androidx.compose.material3.Surface(
+    Surface(
         modifier = Modifier.fillMaxSize(),
-        color = androidx.compose.material3.MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background
     ) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(32.dp),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            androidx.compose.material3.Text(
+            Text(
                 text = "Welcome Back!",
-                style = androidx.compose.material3.MaterialTheme.typography.headlineLarge,
-                color = androidx.compose.material3.MaterialTheme.colorScheme.primary
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.primary
             )
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(8.dp))
-            androidx.compose.material3.Text(
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
                 text = "Login to continue",
-                style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
-                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            androidx.compose.material3.OutlinedTextField(
+            OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
-                label = { androidx.compose.material3.Text("Email Address") },
+                onValueChange = { email = it; loginError = null }, // Clear error on change
+                label = { Text("Email Address") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                isError = loginError != null
+                isError = loginError != null && email.isBlank() // Example: error if related field is blank
             )
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            androidx.compose.material3.OutlinedTextField(
+            OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
-                label = { androidx.compose.material3.Text("Password") },
+                onValueChange = { password = it; loginError = null }, // Clear error on change
+                label = { Text("Password") },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
@@ -119,65 +121,69 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                     imeAction = ImeAction.Done
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                isError = loginError != null
+                isError = loginError != null && password.isBlank() // Example: error if related field is blank
             )
 
             loginError?.let {
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(8.dp))
-                androidx.compose.material3.Text(
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
                     text = it,
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.error,
-                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth() // Ensure error text can wrap
                 )
             }
 
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            androidx.compose.material3.Button(
+            Button(
                 onClick = {
                     if (email.isNotBlank() && password.isNotBlank()) {
-                        // Launch a coroutine to perform login (since it's a suspend function)
-                        // In a real app, this would likely be handled in a ViewModel
-                        // For simplicity, launching directly here.
-                        kotlinx.coroutines.GlobalScope.launch { // Use a proper scope in real app
+                        scope.launch { // Use the Composable's scope
                             if (performLogin(email, password)) {
                                 onLoginSuccess()
                             }
                         }
                     } else {
-                        Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
                         loginError = "Email and password cannot be empty."
+                        // Optionally show a toast for immediate feedback if fields are empty
+                        // Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !isLoading
             ) {
                 if (isLoading) {
-                    androidx.compose.material3.CircularProgressIndicator(
+                    CircularProgressIndicator(
                         modifier = Modifier.size(24.dp),
-                        color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onPrimary // Or primary if it contrasts better
                     )
                 } else {
-                    androidx.compose.material3.Text("Login")
+                    Text("Login")
                 }
             }
 
-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            androidx.compose.material3.TextButton(onClick = { /* TODO: Handle forgot password */ }) {
-                androidx.compose.material3.Text("Forgot Password?")
+            TextButton(onClick = { /* TODO: Handle forgot password */ }) {
+                Text("Forgot Password?")
             }
-            androidx.compose.material3.TextButton(onClick = { /* TODO: Navigate to Sign Up screen */ }) {
-                androidx.compose.material3.Text("Don't have an account? Sign Up")
+            TextButton(onClick = { /* TODO: Navigate to Sign Up screen */ }) {
+                Text("Don't have an account? Sign Up")
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@androidx.compose.runtime.Composable
+@Preview(
+    showBackground = true,
+    device = "spec:width=360dp,height=640dp,dpi=480" // Corrected: units added to width/height, 'unit' param removed
+)
+@Composable
 fun LoginScreenPreview() {
     AIDMTheme {
         LoginScreen(onLoginSuccess = {})
     }
 }
+// Ensure MainActivity exists (even if it's just a placeholder for now)
+// class MainActivity : ComponentActivity() { /* ... */ }

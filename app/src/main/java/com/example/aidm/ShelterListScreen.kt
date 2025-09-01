@@ -1,6 +1,4 @@
 package com.example.aidm
-
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn // Example icon
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,40 +29,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.isEmpty
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.semantics.error
+// REMOVED: LocalContext is no longer needed for starting an Activity.
+// import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.foundation.weight
-import kotlinx.coroutines.delay // For simulating network delay
+import kotlinx.coroutines.delay
 
-// Placeholder data class for Shelter Summary
-data class ShelterSummary(
-    val id: String,
-    val name: String,
-    val shortAddress: String,
-    val currentOccupancy: Int,
-    val capacity: Int
-)
+val repo = FakeRepo()
 
-// Dummy function to simulate fetching a list of shelters
-suspend fun fetchShelterSummaries(): List<ShelterSummary> {
-    delay(1500) // Simulate network delay
-    return listOf(
-        ShelterSummary("shelter123", "Hope Community Shelter", "123 Main St", 75, 100),
-        ShelterSummary("shelter456", "Safe Haven Center", "456 Oak Ave", 30, 50),
-        ShelterSummary("shelter789", "New Beginnings Home", "789 Pine Ln", 90, 120),
-        ShelterSummary("shelterABC", "Downtown Relief Point", "101 State St", 15, 20)
-    )
+suspend fun fetchShelterSummaries(): List<Shelter> {
+    delay(1500)
+    return repo.getShelterList()
 }
 
 @Composable
-fun ShelterListScreen() {
-    var shelters by remember { mutableStateOf<List<ShelterSummary>>(emptyList()) }
+fun ShelterListScreen(
+    // <<< FIX 1: Add the onOpenShelter parameter to the function signature.
+    // It's a function that takes a shelter ID (String) and does something (Unit).
+    onOpenShelter: (shelterId: String) -> Unit
+) {
+    var shelters by remember { mutableStateOf<List<Shelter>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
-    val context = LocalContext.current
+    // REMOVED: context is no longer needed
+    // val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         isLoading = true
@@ -81,7 +69,7 @@ fun ShelterListScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp) // Add padding at the top if there's no AppBar
+            .padding(top = 16.dp)
     ) {
         Text(
             text = "Available Shelters",
@@ -116,13 +104,12 @@ fun ShelterListScreen() {
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(shelters, key = { it.id }) { shelter ->
-                        ShelterListItem(shelter = shelter) {
-                            // Navigate to ShelterDetailActivity
-                            val intent = Intent(context, ShelterDetailActivity::class.java).apply {
-                                putExtra(ShelterDetailActivity.EXTRA_SHELTER_ID, shelter.id)
-                            }
-                            context.startActivity(intent)
-                        }
+                        // Pass the shelter and the onOpenShelter lambda down to the item.
+                        ShelterListItem(
+                            shelter = shelter,
+                            // <<< FIX 2: Call the onOpenShelter lambda when the item is clicked.
+                            onClick = { onOpenShelter(shelter.id) }
+                        )
                     }
                 }
             }
@@ -130,12 +117,14 @@ fun ShelterListScreen() {
     }
 }
 
+// NOTE: The ShelterListItem's 'onClick' signature remains the same, which is fine.
+// It just needs to be called correctly from the LazyColumn above.
 @Composable
-fun ShelterListItem(shelter: ShelterSummary, onClick: () -> Unit) {
+fun ShelterListItem(shelter: Shelter, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick), // This onClick now triggers navigation
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
@@ -145,7 +134,7 @@ fun ShelterListItem(shelter: ShelterSummary, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Filled.LocationOn, // Example icon
+                imageVector = Icons.Filled.LocationOn,
                 contentDescription = "Shelter Location",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(end = 16.dp)
@@ -153,13 +142,13 @@ fun ShelterListItem(shelter: ShelterSummary, onClick: () -> Unit) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(shelter.name, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
-                Text(shelter.shortAddress, style = MaterialTheme.typography.bodyMedium)
+                Text(shelter.address, style = MaterialTheme.typography.bodyMedium)
             }
             Spacer(Modifier.width(16.dp))
             Text(
-                "${shelter.currentOccupancy}/${shelter.capacity}",
+                "${shelter.available}/${shelter.capacity}",
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (shelter.currentOccupancy.toDouble() / shelter.capacity < 0.8) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                color = if (shelter.available.toDouble() / shelter.capacity < 0.8) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )
         }
     }

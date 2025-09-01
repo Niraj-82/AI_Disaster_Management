@@ -1,38 +1,31 @@
-package com.example.aidm
+package com.example.aidm // Or your app's package name
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.aidm.ui.theme.AIDMTheme // Assuming your theme is here
+// Import your ProfileScreen Composable
+import com.example.aidm.ProfileScreen // Make sure this path is correct
+// Import your App Theme
+import com.example.aidm.AIDMTheme // Replace AIDMTheme with your actual theme name
 
-// This is the new Activity class
-class ProfileActivity : ComponentActivity() { // Renamed from FirstAidActivity in your original file
+class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AIDMTheme { // Replace AIDMTheme with your actual theme if different
-                ProfileScreen() // Calling your Composable function
+            // Apply your app's theme
+            AIDMTheme { // Replace AIDMTheme with your actual app theme if different
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    // Display your ProfileScreen Composable
+                    ProfileScreen()
+                }
             }
         }
-    }
-}
-
-// This is your Composable UI function, formerly the structure of your ProfileActivity
-@Composable
-fun ProfileScreen() {
-    // Replace this with your actual Profile Screen UI
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text("User Profile Screen", style = MaterialTheme.typography.headlineMedium)
-        // Add your profile details, edit buttons, etc. here
     }
 }

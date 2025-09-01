@@ -4,27 +4,28 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Campaign // For Announcements
-import androidx.compose.material.icons.filled.Gite // For Shelters
-import androidx.compose.material.icons.filled.Home // Example for Dashboard
+import androidx.compose.material.icons.filled.Campaign // Standard icon
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.MedicalServices // For First Aid
+import androidx.compose.material.icons.filled.MedicalServices // Standard icon for First Aid
+import androidx.compose.material.icons.filled.NightShelter // Good icon for Shelters
 import androidx.compose.material.icons.filled.ReportProblem
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Campaign
-import androidx.compose.material.icons.outlined.Gite
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.MedicalServices
+import androidx.compose.material.icons.outlined.NightShelter
 import androidx.compose.material.icons.outlined.ReportProblem
 import androidx.compose.material3.*
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -34,23 +35,23 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.aidm.ui.theme.AIDMTheme
+import com.example.aidm.AIDMTheme // Assuming this is your theme's location
 
-// Sealed class to represent different screens accessible from Home
+// Sealed class to represent different screens/destinations accessible from Home
 sealed class HomeScreen(
     val route: String,
     val title: String,
     val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val unselectedIcon: ImageVector,
+    val targetActivity: Class<out ComponentActivity>? = null // Optional: For navigation to a separate Activity
 ) {
     object Dashboard : HomeScreen("dashboard", "Dashboard", Icons.Filled.Home, Icons.Outlined.Home)
-    object MapView : HomeScreen("map", "Map", Icons.Filled.Map, Icons.Outlined.Map)
-    object Report : HomeScreen("report", "Report Incident", Icons.Filled.ReportProblem, Icons.Outlined.ReportProblem)
-    object Shelters : HomeScreen("shelters", "Shelters", Icons.Filled.Gite, Icons.Outlined.Gite)
-    object FirstAid : HomeScreen("first_aid", "First Aid", Icons.Filled.MedicalServices, Icons.Outlined.MedicalServices)
-    object Announcements : HomeScreen("announcements", "Announcements", Icons.Filled.Campaign, Icons.Outlined.Campaign)
-    object Profile : HomeScreen("profile", "Profile", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
-    // Add other primary navigation destinations here
+    object MapView : HomeScreen("map", "Map", Icons.Filled.Map, Icons.Outlined.Map, MapActivity::class.java)
+    object Report : HomeScreen("report", "Report Incident", Icons.Filled.ReportProblem, Icons.Outlined.ReportProblem, ReportIncidentActivity::class.java)
+    object Shelters : HomeScreen("shelters", "Shelters", Icons.Filled.NightShelter, Icons.Outlined.NightShelter, ShelterListActivity::class.java)
+    object FirstAid : HomeScreen("first_aid", "First Aid", Icons.Filled.MedicalServices, Icons.Outlined.MedicalServices, FirstAidActivity::class.java)
+    object Announcements : HomeScreen("announcements", "Announcements", Icons.Filled.Campaign, Icons.Outlined.Campaign, AnnouncementsActivity::class.java)
+    object Profile : HomeScreen("profile", "Profile", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle, ProfileActivity::class.java)
 }
 
 class HomeActivity : ComponentActivity() {
@@ -58,65 +59,82 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AIDMTheme {
-                MainHomeScreen()
+                MainAppScreen()
             }
         }
     }
 }
 
-@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class) // For TopAppBar and NavigationBar
-@androidx.compose.runtime.Composable
-fun MainHomeScreen() {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainAppScreen() {
     val context = LocalContext.current
-    var currentScreen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<HomeScreen>(HomeScreen.Dashboard) }
+    // Default to Dashboard screen
+    var currentScreen by remember { mutableStateOf<HomeScreen>(HomeScreen.Dashboard) }
 
-    val navigationItems = listOf(
+    // Define which items appear in the bottom navigation bar
+    // Consider screen real estate; too many items can clutter the bottom bar.
+    // Others might go into a navigation drawer or a "More" menu.
+    val bottomNavigationItems = listOf(
+        HomeScreen.Dashboard,
+        HomeScreen.MapView,
+        HomeScreen.Report,
+        HomeScreen.Announcements, // Example: Moved Announcements to bottom bar
+        HomeScreen.Profile
+    )
+
+    // All possible destinations (could be more than what's on the bottom bar)
+    // This isn't strictly necessary if all nav is activity-based or simple content swap
+    val allDestinations = listOf(
         HomeScreen.Dashboard,
         HomeScreen.MapView,
         HomeScreen.Report,
         HomeScreen.Shelters,
-        // Add more items to the bottom bar if they fit, or move some to a NavDrawer/menu
+        HomeScreen.FirstAid,
+        HomeScreen.Announcements,
         HomeScreen.Profile
     )
 
-    androidx.compose.material3.Scaffold(
+
+    Scaffold(
         topBar = {
-            androidx.compose.material3.TopAppBar(
-                title = { androidx.compose.material3.Text(currentScreen.title) },
-                colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
-                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimaryContainer
+            TopAppBar(
+                title = { Text(currentScreen.title) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
-                // You can add navigationIcon for a drawer or actions items here
+                // You could add a navigationIcon for a NavDrawer here if needed
             )
         },
         bottomBar = {
-            androidx.compose.material3.NavigationBar(
-                containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
-                contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface, // Or surfaceVariant, primaryContainer etc.
+                contentColor = MaterialTheme.colorScheme.onSurface // Or onPrimaryContainer
             ) {
-                navigationItems.forEach { screen ->
+                bottomNavigationItems.forEach { screen ->
+                    val isSelected = currentScreen.route == screen.route
                     NavigationBarItem(
                         icon = {
-                            androidx.compose.material3.Icon(
-                                imageVector = if (currentScreen.route == screen.route) screen.selectedIcon else screen.unselectedIcon,
+                            Icon(
+                                imageVector = if (isSelected) screen.selectedIcon else screen.unselectedIcon,
                                 contentDescription = screen.title
                             )
                         },
-                        label = { androidx.compose.material3.Text(screen.title) },
-                        selected = currentScreen.route == screen.route,
+                        label = { Text(screen.title) },
+                        selected = isSelected,
                         onClick = {
-                            if (currentScreen.route != screen.route) { // Prevent reloading same screen
-                                currentScreen = screen // Update the content
-                                // Actual navigation to other activities happens in HomeContent
+                            if (!isSelected) { // Prevent re-selecting the same screen
+                                currentScreen = screen // Update the current screen state
+                                // Actual navigation to other activities will be handled by HomeContent's LaunchedEffect
                             }
                         },
-                        colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
-                            selectedIconColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
-                            selectedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                            unselectedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
-                            indicatorColor = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer // Ripple color
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            indicatorColor = MaterialTheme.colorScheme.secondaryContainer // Ripple/indicator color
                         )
                     )
                 }
@@ -133,69 +151,84 @@ fun MainHomeScreen() {
     }
 }
 
-@androidx.compose.runtime.Composable
+@Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
     currentScreen: HomeScreen,
     onNavigateToActivity: (Class<out ComponentActivity>) -> Unit
 ) {
-    // This is where you decide what content to show based on `currentScreen`
-    // For screens that are separate Activities, we trigger navigation.
-    // For screens that are simple Composables, we can display them directly.
-
-    androidx.compose.runtime.LaunchedEffect(currentScreen) { // React to changes in currentScreen
-        when (currentScreen) {
-            HomeScreen.MapView -> onNavigateToActivity(MapActivity::class.java)
-            HomeScreen.Report -> onNavigateToActivity(ReportIncidentActivity::class.java)
-            HomeScreen.Shelters -> onNavigateToActivity(ShelterListActivity::class.java)
-            HomeScreen.FirstAid -> onNavigateToActivity(FirstAidActivity::class.java) // Assuming you have this
-            HomeScreen.Announcements -> onNavigateToActivity(AnnouncementsActivity::class.java) // Assuming
-            HomeScreen.Profile -> onNavigateToActivity(ProfileActivity::class.java) // Assuming
-            // For Dashboard or other simple composable-only screens, they'd be handled below
-            else -> { /* Current screen is handled by the Column below or is a no-op for activity nav */ }
+    // This LaunchedEffect handles navigation to separate Activities
+    // when currentScreen changes to one that has a targetActivity.
+    LaunchedEffect(currentScreen) {
+        currentScreen.targetActivity?.let { activityClass ->
+            onNavigateToActivity(activityClass)
+            // Note: If you navigate to another activity, the HomeActivity might go to the background.
+            // The content below (Column) might briefly show or not at all if the new activity starts quickly.
+            // If you want HomeActivity to stay and swap content *within* itself using Jetpack Navigation Compose,
+            // the structure would be different (using NavHost).
         }
     }
 
-    // Display content for screens that are NOT separate activities, or a placeholder
+    // This Column displays content for screens that are handled *within* HomeActivity
+    // (i.e., those without a targetActivity, like the Dashboard in this example).
+    // Or it can serve as a placeholder while an activity is being launched.
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+        verticalArrangement = Arrangement.Center
     ) {
         when (currentScreen) {
             HomeScreen.Dashboard -> {
-                androidx.compose.material3.Text("Welcome to the Dashboard!", style = androidx.compose.material3.MaterialTheme.typography.headlineMedium)
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
-                androidx.compose.material3.Button(onClick = { onNavigateToActivity(RouteActivity::class.java) }) { // Example Button
-                    androidx.compose.material3.Text("Show Example Route")
+                // Content for the Dashboard screen
+                Text("Welcome to the Dashboard!", style = MaterialTheme.typography.headlineMedium)
+                Spacer(modifier = Modifier.height(16.dp))
+                // Example: Add buttons to navigate to other less-frequent screens
+                // that are not on the bottom bar but are separate activities.
+                Button(onClick = { onNavigateToActivity(HomeScreen.FirstAid.targetActivity!!) }) {
+                    Text("Go to First Aid Guide")
                 }
-                // Add more dashboard elements here
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { onNavigateToActivity(HomeScreen.Shelters.targetActivity!!) }) {
+                    Text("Find Shelters")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { onNavigateToActivity(RouteActivity::class.java) }) { // Assuming RouteActivity exists
+                    Text("Show Example Route")
+                }
+                // Add more Dashboard specific UI elements here
             }
-            // Add cases for other screens if they are simple composables and not full Activities
-            // e.g., if Profile was a simple Composable screen within HomeActivity:
-            // HomeScreen.Profile -> ProfileContentComposable()
+            // If any other screens were to be displayed directly within HomeActivity
+            // without launching a new Activity, their content would go here.
+            // For example, if Profile was a simple Composable:
+            // HomeScreen.Profile -> ProfileScreenComposable()
             else -> {
-                // This state might be transient while an Activity is being launched.
-                // Or if it's a screen handled by LaunchedEffect above, this is a fallback.
-                androidx.compose.material3.Text(
-                    "Selected: ${currentScreen.title}",
-                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+                // This content is shown if the currentScreen is one that launches a new Activity.
+                // It can act as a temporary placeholder.
+                Text(
+                    "Loading ${currentScreen.title}...",
+                    style = MaterialTheme.typography.bodyLarge
                 )
-                androidx.compose.material3.Text(
-                    "(Navigating to separate activity if applicable)",
-                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall
-                )
+                if (currentScreen.targetActivity != null) {
+                    Text(
+                        "(Navigating to separate screen)",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }
 }
 
-
 @Preview(showBackground = true)
-@androidx.compose.runtime.Composable
-fun MainHomeScreenPreview() {
+@Composable
+fun MainAppScreenPreview() {
     AIDMTheme {
-        MainHomeScreen()
+        MainAppScreen()
     }
 }
 
+// Dummy Activity classes for preview and structure - replace with your actual activities
+class MapActivity : ComponentActivity() { /* ... */ }
+class ReportIncidentActivity : ComponentActivity() { /* ... */ }
+class ProfileActivity : ComponentActivity() { /* ... */ }
+class RouteActivity : ComponentActivity() { /* ... */ }

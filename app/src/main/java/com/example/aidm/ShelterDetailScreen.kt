@@ -4,9 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.aidm.app.data.FakeRepo
-import com.aidm.app.model.Shelter
-import com.aidm.app.ui.components.Loading
+import com.example.aidm.FakeRepo
+import com.example.aidm.ShelterListScreen
+import com.example.aidm.Loading
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.activity.ComponentActivity
 import android.os.Bundle

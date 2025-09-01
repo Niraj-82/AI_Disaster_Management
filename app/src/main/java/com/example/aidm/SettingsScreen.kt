@@ -1,119 +1,211 @@
 package com.example.aidm
 
-// ... other necessary Compose imports
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.WbSunny
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.error
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.aidm.AIDMTheme // Make sure this import path is correct
 
-// Placeholder data class for Shelter Details
-data class ShelterDetails(
-    val id: String,
-    val name: String,
-    val address: String,
-    val capacity: Int,
-    val currentOccupancy: Int,
-    val services: List<String>
-)
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsScreen(onNavigateBack: () -> Unit = {}) {
+    // State for the switches. In a real app, this would be managed by a ViewModel
+    // and saved to a data store like DataStore or SharedPreferences.
+    var notificationsEnabled by remember { mutableStateOf(true) }
+    var darkModeEnabled by remember { mutableStateOf(false) }
 
-// Dummy function to simulate fetching shelter details
-suspend fun fetchShelterDetails(shelterId: String): ShelterDetails? {
-    // In a real app, this would be a network call or database query
-    kotlinx.coroutines.delay(1000) // Simulate network delay
-    return if (shelterId == "shelter123") {
-        ShelterDetails(
-            id = "shelter123",
-            name = "Hope Community Shelter",
-            address = "123 Main St, Anytown",
-            capacity = 100,
-            currentOccupancy = 75,
-            services = listOf("Meals", "Beds", "Showers", "Counseling")
-        )
-    } else {
-        null
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Settings") },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            // General Section
+            item {
+                SettingsHeader("General")
+            }
+            item {
+                SettingsSwitchItem(
+                    title = "Enable Notifications",
+                    icon = Icons.Default.Notifications,
+                    checked = notificationsEnabled,
+                    onCheckedChange = { notificationsEnabled = it }
+                )
+            }
+            item {
+                SettingsSwitchItem(
+                    title = "Dark Mode",
+                    icon = Icons.Default.WbSunny,
+                    checked = darkModeEnabled,
+                    onCheckedChange = { darkModeEnabled = it /* TODO: Implement theme change logic */ }
+                )
+            }
+            item {
+                SettingsClickableItem(
+                    title = "Language",
+                    subtitle = "English",
+                    icon = Icons.Default.Language,
+                    onClick = { /* TODO: Navigate to Language selection screen */ }
+                )
+            }
+
+            // Other Section
+            item {
+                SettingsHeader("Other")
+            }
+            item {
+                SettingsClickableItem(
+                    title = "Help & Support",
+                    icon = Icons.AutoMirrored.Filled.HelpOutline,
+                    onClick = { /* TODO: Navigate to Help screen */ }
+                )
+            }
+            item {
+                SettingsClickableItem(
+                    title = "Privacy Policy",
+                    icon = Icons.Default.Shield,
+                    onClick = { /* TODO: Open Privacy Policy URL */ }
+                )
+            }
+            item {
+                SettingsClickableItem(
+                    title = "About",
+                    icon = Icons.Default.Info,
+                    onClick = { /* TODO: Navigate to About screen */ }
+                )
+            }
+
+            // Account Section
+            item {
+                SettingsHeader("Account")
+            }
+            item {
+                SettingsClickableItem(
+                    title = "Log Out",
+                    icon = Icons.AutoMirrored.Filled.ExitToApp,
+                    onClick = { /* TODO: Implement logout logic */ }
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun ShelterDetailScreen(shelterId: String?) {
-    var shelterDetails by remember { mutableStateOf<ShelterDetails?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var error by remember { mutableStateOf<String?>(null) }
+private fun SettingsHeader(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp)
+    )
+}
 
-    LaunchedEffect(shelterId) {
-        isLoading = true
-        error = null
-        if (shelterId == null) {
-            error = "Shelter ID not provided."
-            isLoading = false
-            return@LaunchedEffect
-        }
-        try {
-            shelterDetails = fetchShelterDetails(shelterId)
-            if (shelterDetails == null) {
-                error = "Shelter not found."
-            }
-        } catch (e: Exception) {
-            error = "Failed to load shelter details: ${e.message}"
-        } finally {
-            isLoading = false
-        }
-    }
-
-    Box(
+@Composable
+private fun SettingsSwitchItem(
+    title: String,
+    icon: ImageVector,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.TopStart // Changed to TopStart for typical detail screens
+            .fillMaxWidth()
+            .clickable { onCheckedChange(!checked) }
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        when {
-            isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            error != null -> {
-                Text(
-                    text = error!!,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-            shelterDetails != null -> {
-                val details = shelterDetails!!
-                Column {
-                    Text(details.name, style = MaterialTheme.typography.headlineMedium)
-                    Spacer(Modifier.height(8.dp))
-                    Text("Address: ${details.address}", style = MaterialTheme.typography.bodyLarge)
-                    Spacer(Modifier.height(4.dp))
-                    Text("Capacity: ${details.currentOccupancy} / ${details.capacity}", style = MaterialTheme.typography.bodyMedium)
-                    Spacer(Modifier.height(16.dp))
-                    Text("Services Offered:", style = MaterialTheme.typography.titleMedium)
-                    details.services.forEach { service ->
-                        Text("• $service", style = MaterialTheme.typography.bodyMedium)
-                    }
-                    // Add more details, map view, contact info, etc.
-                }
-            }
-            else -> {
-                Text(
-                    "No shelter details available.",
-                    modifier = Modifier.align(Alignment.Center)
-                )
+        Icon(imageVector = icon, contentDescription = title)
+        Spacer(Modifier.width(16.dp))
+        Text(text = title, modifier = Modifier.weight(1f))
+        Switch(checked = checked, onCheckedChange = onCheckedChange)
+    }
+}
+
+@Composable
+private fun SettingsClickableItem(
+    title: String,
+    subtitle: String? = null,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = icon, contentDescription = title)
+        Spacer(Modifier.width(16.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = title)
+            if (subtitle != null) {
+                Text(text = subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = "Navigate to $title"
+        )
+    }
+}
+
+// --- Previews ---
+
+@Preview(showBackground = true)
+@Composable
+fun SettingsScreenPreview() {
+    AIDMTheme {
+        SettingsScreen()
     }
 }
