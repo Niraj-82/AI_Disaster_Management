@@ -1,0 +1,825 @@
+Index: app/src/main/java/com/example/aidm/FirstAidActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport com.example.aidm.ui.theme.AIDMTheme // Assuming your theme is here\r\n\r\nclass FirstAidActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContent {\r\n            // You can wrap your screen in your app's theme\r\n            AIDMTheme { // Replace AIDMTheme with your actual theme if different\r\n                FirstAidScreen() // Calling your Composable function\r\n            }\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/FirstAidActivity.kt b/app/src/main/java/com/example/aidm/FirstAidActivity.kt
+--- a/app/src/main/java/com/example/aidm/FirstAidActivity.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/FirstAidActivity.kt	(date 1756134196452)
+@@ -3,7 +3,7 @@
+ import android.os.Bundle
+ import androidx.activity.ComponentActivity
+ import androidx.activity.compose.setContent
+-import com.example.aidm.ui.theme.AIDMTheme // Assuming your theme is here
++import com.example.aidm.AIDMTheme // Assuming your theme is here
+ 
+ class FirstAidActivity : ComponentActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+Index: app/src/main/java/com/example/aidm/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport androidx.activity.ComponentActivity // Or import android.app.Activity, etc.\r\nimport android.os.Bundle\r\nimport android.Manifest\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.material3.*\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.aidm.app.ui.theme.AIDMTheme\r\nimport com.aidm.app.nav.Routes\r\nimport androidx.navigation.compose.NavHost\r\nimport androidx.navigation.compose.composable\r\nimport com.aidm.app.ui.screens.*\r\nimport com.aidm.app.ui.screens.shelter.ShelterDetailScreen\r\nimport com.aidm.app.ui.screens.shelter.ShelterListScreen\r\nimport com.google.accompanist.permissions.*\r\n\r\nclass MainActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContent {\r\n            AIDMTheme {\r\n                val nav = rememberNavController()\r\n\r\n                NavHost(navController = nav, startDestination = Routes.Splash) {\r\n                    composable(Routes.Splash) { SplashScreen(onDone = { nav.navigate(Routes.Login) { popUpTo(Routes.Splash) { inclusive = true } } }) }\r\n                    composable(Routes.Login)  { LoginScreen(onLogin = { nav.navigate(Routes.Home) { popUpTo(Routes.Login) { inclusive = true } } }) }\r\n                    composable(Routes.Home)   { HomeScreen(\r\n                        onOpenMap = { nav.navigate(Routes.Map) },\r\n                        onOpenRoute = { nav.navigate(Routes.Route) },\r\n                        onReport = { nav.navigate(Routes.Report) },\r\n                        onShelters = { nav.navigate(Routes.Shelters) },\r\n                        onFirstAid = { nav.navigate(Routes.FirstAid) },\r\n                        onAnnouncements = { nav.navigate(Routes.Announcements) },\r\n                        onProfile = { nav.navigate(Routes.Profile) },\r\n                        onSettings = { nav.navigate(Routes.Settings) }\r\n                    ) }\r\n                    composable(Routes.Map) { MapScreen() }\r\n                    composable(Routes.Route) { RouteScreen() }\r\n                    composable(Routes.Report) { ReportIncidentScreen() }\r\n                    composable(Routes.Shelters) { ShelterListScreen(onOpen = { id -> nav.navigate(\"shelter/$id\") }) }\r\n                    composable(Routes.ShelterDetail) { backStack ->\r\n                        val id = backStack.arguments?.getString(\"id\") ?: \"\"\r\n                        ShelterDetailScreen(id)\r\n                    }\r\n                    composable(Routes.FirstAid) { FirstAidScreen() }\r\n                    composable(Routes.Announcements) { AnnouncementsScreen() }\r\n                    composable(Routes.Profile) { ProfileScreen() }\r\n                    composable(Routes.Settings) { SettingsScreen() }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/MainActivity.kt b/app/src/main/java/com/example/aidm/MainActivity.kt
+--- a/app/src/main/java/com/example/aidm/MainActivity.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/MainActivity.kt	(date 1756271442975)
+@@ -3,18 +3,15 @@
+ import androidx.activity.ComponentActivity // Or import android.app.Activity, etc.
+ import android.os.Bundle
+ import android.Manifest
+-import android.os.Bundle
+-import androidx.activity.ComponentActivity
+ import androidx.activity.compose.setContent
+ import androidx.compose.material3.*
+ import androidx.navigation.compose.rememberNavController
+-import com.aidm.app.ui.theme.AIDMTheme
+-import com.aidm.app.nav.Routes
++import com.example.aidm.AIDMTheme
++import com.example.aidm.Routes
+ import androidx.navigation.compose.NavHost
+ import androidx.navigation.compose.composable
+-import com.aidm.app.ui.screens.*
+-import com.aidm.app.ui.screens.shelter.ShelterDetailScreen
+-import com.aidm.app.ui.screens.shelter.ShelterListScreen
++import com.example.aidm.ShelterDetailScreen
++import com.example.aidm.ShelterListScreen
+ import com.google.accompanist.permissions.*
+ 
+ class MainActivity : ComponentActivity() {
+Index: app/src/main/java/com/example/aidm/ReportIncidentScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport androidx.activity.ComponentActivity\r\nimport android.os.Bundle\r\nimport android.annotation.SuppressLint\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport com.aidm.app.data.FakeRepo\r\nimport com.aidm.app.ui.components.Loading\r\nimport com.google.accompanist.permissions.ExperimentalPermissionsApi\r\nimport com.google.accompanist.permissions.rememberPermissionState\r\nimport com.google.android.gms.location.LocationServices\r\nimport kotlinx.coroutines.launch\r\n\r\n@OptIn(ExperimentalPermissionsApi::class)\r\n@Composable\r\nfun ReportIncidentScreen() {\r\n    val ctx = LocalContext.current\r\n    val scope = rememberCoroutineScope()\r\n    val repo = remember { FakeRepo() }\r\n\r\n    var type by remember { mutableStateOf(\"Flood\") }\r\n    var desc by remember { mutableStateOf(\"\") }\r\n    var lat by remember { mutableStateOf<Double?>(null) }\r\n    var lng by remember { mutableStateOf<Double?>(null) }\r\n    var loading by remember { mutableStateOf(false) }\r\n    val fine = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)\r\n\r\n    LaunchedEffect(Unit) { if (!fine.status.isGranted) fine.launchPermissionRequest() }\r\n\r\n    Column(Modifier.fillMaxSize().padding(16.dp)) {\r\n        Text(\"Report Incident\", style = MaterialTheme.typography.headlineSmall)\r\n        OutlinedTextField(type, { type = it }, label = { Text(\"Type\") }, modifier = Modifier.fillMaxWidth())\r\n        OutlinedTextField(desc, { desc = it }, label = { Text(\"Description\") }, modifier = Modifier.fillMaxWidth())\r\n        Spacer(Modifier.height(8.dp))\r\n        Row {\r\n            OutlinedButton(onClick = {\r\n                if (fine.status.isGranted) {\r\n                    @SuppressLint(\"MissingPermission\")\r\n                    val client = LocationServices.getFusedLocationProviderClient(ctx)\r\n                    client.lastLocation.addOnSuccessListener { loc ->\r\n                        lat = loc?.latitude; lng = loc?.longitude\r\n                    }\r\n                }\r\n            }) { Text(\"Use Current Location\") }\r\n            Spacer(Modifier.width(8.dp))\r\n            Text(\"Lat: ${lat ?: \"-\"}  Lng: ${lng ?: \"-\"}\")\r\n        }\r\n        Spacer(Modifier.height(12.dp))\r\n        Button(onClick = {\r\n            loading = true\r\n            scope.launch {\r\n                val res = repo.submitIncident(\r\n                    type, desc,\r\n                    lat ?: 19.0760, lng ?: 72.8777\r\n                )\r\n                loading = false\r\n                desc = \"\"\r\n            }\r\n        }, modifier = Modifier.fillMaxWidth()) { Text(\"Submit\") }\r\n\r\n        if (loading) Loading()\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/ReportIncidentScreen.kt b/app/src/main/java/com/example/aidm/ReportIncidentScreen.kt
+--- a/app/src/main/java/com/example/aidm/ReportIncidentScreen.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/ReportIncidentScreen.kt	(date 1756270248970)
+@@ -1,67 +1,170 @@
+ package com.example.aidm
+ 
+-import androidx.activity.ComponentActivity
+-import android.os.Bundle
++// import androidx.activity.ComponentActivity // Already there
++// import android.os.Bundle // Already there
++import android.Manifest
+ import android.annotation.SuppressLint
++import android.content.pm.PackageManager
++import androidx.activity.compose.rememberLauncherForActivityResult
++import androidx.activity.result.contract.ActivityResultContracts
+ import androidx.compose.foundation.layout.*
++// import androidx.compose.foundation.layout.height // Already there
++// import androidx.compose.foundation.layout.padding // Already there
+ import androidx.compose.material3.*
+ import androidx.compose.runtime.*
++import androidx.compose.runtime.getValue
++import androidx.compose.runtime.setValue
++// import androidx.compose.runtime.getValue // Already there
++// import androidx.compose.runtime.setValue // Already there
++import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.platform.LocalContext
+-import com.aidm.app.data.FakeRepo
+-import com.aidm.app.ui.components.Loading
+-import com.google.accompanist.permissions.ExperimentalPermissionsApi
+-import com.google.accompanist.permissions.rememberPermissionState
++import androidx.compose.ui.unit.dp
++import androidx.core.content.ContextCompat
++import androidx.lifecycle.ViewModel
++// import com.example.aidm.FakeRepo // Assuming FakeRepo is defined
++// import com.example.aidm.Loading // Keep if used, or remove
++// REMOVE ACCOMPANIST IMPORTS
++// import com.google.accompanist.permissions.ExperimentalPermissionsApi
++// import com.google.accompanist.permissions.rememberPermissionState
+ import com.google.android.gms.location.LocationServices
+ import kotlinx.coroutines.launch
++import androidx.lifecycle.viewmodel.compose.viewModel
++import kotlin.text.format
+ 
+-@OptIn(ExperimentalPermissionsApi::class)
++// Remove @OptIn for Accompanist
++// @OptIn(ExperimentalPermissionsApi::class)
+ @Composable
+-fun ReportIncidentScreen() {
++fun ReportIncidentScreen(
++    sharedViewModel: SharedIncidentViewModel = viewModel()
++) {
+     val ctx = LocalContext.current
+     val scope = rememberCoroutineScope()
+-    val repo = remember { FakeRepo() }
++    val repo = sharedViewModel.getRepository()
+ 
+     var type by remember { mutableStateOf("Flood") }
+     var desc by remember { mutableStateOf("") }
+     var lat by remember { mutableStateOf<Double?>(null) }
+     var lng by remember { mutableStateOf<Double?>(null) }
+     var loading by remember { mutableStateOf(false) }
+-    val fine = rememberPermissionState(android.Manifest.permission.ACCESS_FINE_LOCATION)
++    var submissionMessage by remember { mutableStateOf<String?>(null) }
++
++    // --- Modern Permission Handling ---
++    var hasLocationPermission by remember {
++        mutableStateOf(
++            ContextCompat.checkSelfPermission(
++                ctx,
++                Manifest.permission.ACCESS_FINE_LOCATION
++            ) == PackageManager.PERMISSION_GRANTED
++        )
++    }
+ 
+-    LaunchedEffect(Unit) { if (!fine.status.isGranted) fine.launchPermissionRequest() }
++    val locationPermissionLauncher = rememberLauncherForActivityResult(
++        contract = ActivityResultContracts.RequestPermission(),
++        onResult = { isGranted ->
++            hasLocationPermission = isGranted
++            if (!isGranted) {
++                submissionMessage = "Location permission denied. Cannot get current location."
++            }
++        }
++    )
+ 
+-    Column(Modifier.fillMaxSize().padding(16.dp)) {
++    // Request permission if not granted when the composable enters the composition
++    LaunchedEffect(Unit) {
++        if (!hasLocationPermission) {
++            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
++        }
++    }
++    // --- End of Modern Permission Handling ---
++
++
++    Column(
++        Modifier
++            .fillMaxSize()
++            .padding(16.dp)
++    ) {
+         Text("Report Incident", style = MaterialTheme.typography.headlineSmall)
+         OutlinedTextField(type, { type = it }, label = { Text("Type") }, modifier = Modifier.fillMaxWidth())
+-        OutlinedTextField(desc, { desc = it }, label = { Text("Description") }, modifier = Modifier.fillMaxWidth())
++        OutlinedTextField(
++            desc, { desc = it }, label = { Text("Description") }, modifier = Modifier.fillMaxWidth(),
++            placeholder = { Text("Describe the incident...") }
++        )
+         Spacer(Modifier.height(8.dp))
+-        Row {
++        Row(verticalAlignment = Alignment.CenterVertically) {
+             OutlinedButton(onClick = {
+-                if (fine.status.isGranted) {
+-                    @SuppressLint("MissingPermission")
+-                    val client = LocationServices.getFusedLocationProviderClient(ctx)
+-                    client.lastLocation.addOnSuccessListener { loc ->
+-                        lat = loc?.latitude; lng = loc?.longitude
++                if (hasLocationPermission) {
++                    @SuppressLint("MissingPermission") // Suppress if you've already checked hasLocationPermission
++                    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx)
++                    fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
++                        if (loc != null) {
++                            lat = loc.latitude
++                            lng = loc.longitude
++                            submissionMessage = null // Clear previous messages
++                        } else {
++                            submissionMessage = "Failed to get location: Location is null."
++                        }
++                    }.addOnFailureListener {
++                        submissionMessage = "Failed to get location: ${it.message}"
+                     }
++                } else {
++                    // Optionally, re-request or guide user to settings
++                    locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
++                    submissionMessage = "Location permission not granted. Please grant permission."
+                 }
+             }) { Text("Use Current Location") }
+             Spacer(Modifier.width(8.dp))
+-            Text("Lat: ${lat ?: "-"}  Lng: ${lng ?: "-"}")
++            Text(
++                "Lat: ${lat?.format(2) ?: "-"} Lng: ${lng?.format(2) ?: "-"}",
++                style = MaterialTheme.typography.bodySmall
++            )
+         }
+         Spacer(Modifier.height(12.dp))
+-        Button(onClick = {
+-            loading = true
+-            scope.launch {
+-                val res = repo.submitIncident(
+-                    type, desc,
+-                    lat ?: 19.0760, lng ?: 72.8777
+-                )
+-                loading = false
+-                desc = ""
++        Button(
++            onClick = {
++                if (desc.isBlank()) {
++                    submissionMessage = "Description cannot be empty."
++                    return@Button
++                }
++                loading = true
++                submissionMessage = null
++                scope.launch {
++                    val currentLat = lat ?: 19.0760 // Default if not set
++                    val currentLng = lng ?: 72.8777 // Default if not set
++
++                    val success = repo.submitIncident(type, desc, currentLat, currentLng)
++                    loading = false
++                    if (success) {
++                        desc = "" // Clear description on success
++                        submissionMessage = "Incident reported successfully!"
++                    } else {
++                        submissionMessage = "Failed to report incident."
++                    }
++                }
++            },
++            modifier = Modifier.fillMaxWidth(),
++            enabled = !loading
++        ) {
++            if (loading) {
++                CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
++            } else {
++                Text("Submit")
+             }
+-        }, modifier = Modifier.fillMaxWidth()) { Text("Submit") }
+-
+-        if (loading) Loading()
++        }
++        submissionMessage?.let {
++            Text(
++                it,
++                color = if (it.contains("successfully")) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
++                modifier = Modifier.padding(top = 8.dp)
++            )
++        }
+     }
+ }
++
++// Helper to format Double for display - already present
++// private fun Double.format(digits: Int) = "%.${digits}f".format(this)
++
++// SharedIncidentViewModel - already present
++// class SharedIncidentViewModel(private val repo: FakeRepo = FakeRepo()) : ViewModel() {
++//    fun getRepository(): FakeRepo = repo
++// }
++
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id(\"com.android.application\")\r\n    id(\"org.jetbrains.kotlin.android\")\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.example.aidm\"\r\n    compileSdk = 34\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.example.aidm\"\r\n        minSdk = 24\r\n        targetSdk = 34\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n        vectorDrawables {\r\n            useSupportLibrary = true\r\n        }\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(\r\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\r\n                \"proguard-rules.pro\"\r\n            )\r\n        }\r\n    }\r\n\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_1_8\r\n        targetCompatibility = JavaVersion.VERSION_1_8\r\n    }\r\n    kotlinOptions {\r\n        jvmTarget = \"1.8\"\r\n    }\r\n\r\n    buildFeatures {\r\n        compose = true\r\n    }\r\n    composeOptions {\r\n        kotlinCompilerExtensionVersion = \"1.5.1\" // match your Kotlin version\r\n    }\r\n    packaging {\r\n        resources {\r\n            excludes += \"/META-INF/{AL2.0,LGPL2.1}\"\r\n        }\r\n    }\r\n\r\n    testOptions {\r\n        unitTests.isIncludeAndroidResources = true\r\n    }\r\n}\r\n\r\ndependencies {\r\n    // Core\r\n    implementation(\"androidx.core:core-ktx:1.13.1\")\r\n    implementation(\"androidx.lifecycle:lifecycle-runtime-ktx:2.8.5\")\r\n    implementation(\"androidx.appcompat:appcompat:1.7.0\")\r\n    implementation(\"com.google.android.material:material:1.12.0\")\r\n    implementation(\"androidx.constraintlayout:constraintlayout:2.1.4\")\r\n\r\n    // Activity & Compose\r\n    implementation(\"androidx.activity:activity-compose:1.9.2\")\r\n\r\n    // Compose BOM\r\n    val composeBom = platform(\"androidx.compose:compose-bom:2024.09.02\")\r\n    implementation(composeBom)\r\n    androidTestImplementation(composeBom)\r\n\r\n    // Compose Libraries\r\n    implementation(\"androidx.compose.ui:ui\")\r\n    implementation(\"androidx.compose.ui:ui-graphics\")\r\n    implementation(\"androidx.compose.ui:ui-tooling-preview\")\r\n    implementation(\"androidx.compose.material3:material3\")\r\n\r\n    // Lifecycle Compose\r\n    implementation(\"androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5\")\r\n\r\n    // Google Maps\r\n    implementation(\"com.google.maps.android:maps-compose:4.4.1\")\r\n    implementation(\"com.google.android.gms:play-services-maps:19.0.0\")\r\n\r\n    // Glance (for widgets)\r\n    implementation(\"androidx.glance:glance-appwidget:1.1.1\")\r\n    implementation(\"androidx.glance:glance-material3:1.1.1\")\r\n\r\n    // Testing\r\n    testImplementation(\"junit:junit:4.13.2\")\r\n    androidTestImplementation(\"androidx.test.ext:junit:1.2.1\")\r\n    androidTestImplementation(\"androidx.test.espresso:espresso-core:3.6.1\")\r\n    androidTestImplementation(\"androidx.compose.ui:ui-test-junit4\")\r\n\r\n    debugImplementation(\"androidx.compose.ui:ui-tooling\")\r\n    debugImplementation(\"androidx.compose.ui:ui-test-manifest\")\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/build.gradle.kts	(date 1756271443003)
+@@ -65,15 +65,20 @@
+ 
+     // Activity & Compose
+     implementation("androidx.activity:activity-compose:1.9.2")
++    implementation(libs.androidx.activity)
+ 
+     // Compose BOM
+     val composeBom = platform("androidx.compose:compose-bom:2024.09.02")
+     implementation(composeBom)
+     androidTestImplementation(composeBom)
+ 
++    implementation(libs.androidx.compose.material3)
++    implementation(libs.androidx.compose.material.icons.core)     // Usually transitive via material3
++    implementation(libs.androidx.compose.material.icons.extended) // Add this for more icons
++
+     // Compose Libraries
+     implementation("androidx.compose.ui:ui")
+-    implementation("androidx.compose.ui:ui-graphics")
++    implementation(libs.androidx.navigationCompose)
+     implementation("androidx.compose.ui:ui-tooling-preview")
+     implementation("androidx.compose.material3:material3")
+ 
+Index: app/src/main/java/com/example/aidm/HomeScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport androidx.activity.ComponentActivity // Or import android.app.Activity, etc.\r\nimport android.os.Bundle\r\nimport android.content.Intent\r\nimport android.net.Uri\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\n\r\n@Composable\r\nfun HomeScreen(\r\n    onOpenMap: () -> Unit,\r\n    onOpenRoute: () -> Unit,\r\n    onReport: () -> Unit,\r\n    onShelters: () -> Unit,\r\n    onFirstAid: () -> Unit,\r\n    onAnnouncements: () -> Unit,\r\n    onProfile: () -> Unit,\r\n    onSettings: () -> Unit\r\n) {\r\n    val ctx = LocalContext.current\r\n    Column(Modifier.fillMaxSize().padding(16.dp)) {\r\n        Text(\"Disaster Alerts: None nearby\", style = MaterialTheme.typography.titleMedium)\r\n        Spacer(Modifier.height(12.dp))\r\n        Button(onClick = onOpenMap, modifier = Modifier.fillMaxWidth()) { Text(\"Live Disaster Map\") }\r\n        Button(onClick = onOpenRoute, modifier = Modifier.fillMaxWidth()) { Text(\"Safe Route Finder\") }\r\n        Button(onClick = onShelters, modifier = Modifier.fillMaxWidth()) { Text(\"Nearby Shelters\") }\r\n        Button(onClick = onReport, modifier = Modifier.fillMaxWidth()) { Text(\"Report Incident\") }\r\n        Button(onClick = onFirstAid, modifier = Modifier.fillMaxWidth()) { Text(\"First Aid Guide\") }\r\n        Button(onClick = onAnnouncements, modifier = Modifier.fillMaxWidth()) { Text(\"Announcements\") }\r\n        Spacer(Modifier.height(24.dp))\r\n        Button(\r\n            onClick = {\r\n                // Simple SOS via share (no SMS permission needed)\r\n                val msg = \"\uD83D\uDEA8 SOS! I need help. My location: https://maps.google.com/?q=0,0\"\r\n                val share = Intent(Intent.ACTION_SEND).apply {\r\n                    type = \"text/plain\"\r\n                    putExtra(Intent.EXTRA_TEXT, msg)\r\n                }\r\n                ctx.startActivity(Intent.createChooser(share, \"Send SOS\"))\r\n            },\r\n            modifier = Modifier.fillMaxWidth(),\r\n            colors = ButtonDefaults.buttonColors()\r\n        ) { Text(\"\uD83D\uDEA8 SOS (Share Location)\") }\r\n\r\n        Spacer(Modifier.weight(1f))\r\n        Row {\r\n            OutlinedButton(onClick = onProfile, modifier = Modifier.weight(1f)) { Text(\"Profile\") }\r\n            Spacer(Modifier.width(8.dp))\r\n            OutlinedButton(onClick = onSettings, modifier = Modifier.weight(1f)) { Text(\"Settings\") }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/HomeScreen.kt b/app/src/main/java/com/example/aidm/HomeScreen.kt
+--- a/app/src/main/java/com/example/aidm/HomeScreen.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/HomeScreen.kt	(date 1756134390866)
+@@ -9,6 +9,8 @@
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.platform.LocalContext
++import androidx.compose.ui.unit.dp
++
+ 
+ @Composable
+ fun HomeScreen(
+Index: gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[versions]\r\nagp = \"8.12.1\" # From your file\r\nkotlin = \"2.0.21\" # From your file\r\ncoreKtx = \"1.10.1\" # From your file\r\njunit = \"4.13.2\" # From your file\r\njunitVersion = \"1.1.5\" # From your file (for androidx.test.ext:junit)\r\nespressoCore = \"3.5.1\" # From your file\r\nappcompat = \"1.6.1\" # From your file\r\nmaterial = \"1.10.0\" # From your file (com.google.android.material:material)\r\nactivity = \"1.8.0\" # From your file (androidx.activity:activity)\r\nconstraintlayout = \"2.1.4\" # From your file\r\nglance = \"1.1.0\"\r\n# Jetpack Compose\r\nandroidxComposeBom = \"2024.06.00\" # CHECK FOR THE LATEST STABLE VERSION!\r\nactivityComposeVersion = \"1.9.0\"  # You had this version specifically for activity-compose\r\n\r\n# Lifecycle\r\nlifecycleVersion = \"2.8.3\" # CHECK FOR THE LATEST STABLE VERSION! (e.g., for ViewModel, LiveData, Runtime)\r\n\r\n# Google Maps Compose\r\nmapsComposeVersion = \"4.3.3\" # CHECK FOR THE LATEST STABLE VERSION!\r\nplayServicesMapsVersion = \"18.2.0\" # CHECK FOR THE LATEST STABLE VERSION!\r\n\r\n\r\n[libraries]\r\n# AndroidX Core\r\nandroidx-core-ktx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"coreKtx\" }\r\nandroidx-glance-appwidget = { group = \"androidx.glance\", name = \"glance-appwidget\", version.ref = \"glance\" }\r\nandroidx-glance-material3 = { group = \"androidx.glance\", name = \"glance-material3\", version.ref = \"glance\" } # Optional, for Material 3 components in Glance\r\nandroidx-glance-appwidget-proto = { group = \"androidx.glance\", name = \"glance-appwidget-proto\", version.ref = \"glance\" }\r\n# Testing\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\nandroidx-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nandroidx-espresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\n\r\n# UI - AppCompat & Material (Legacy, if still used alongside Compose for themes/activities)\r\nandroidx-appcompat = { group = \"androidx.appcompat\", name = \"appcompat\", version.ref = \"appcompat\" }\r\nmaterial = { group = \"com.google.android.material\", name = \"material\", version.ref = \"material\" } # Google Material Components\r\n\r\n# UI - Layout (Legacy)\r\nandroidx-constraintlayout = { group = \"androidx.constraintlayout\", name = \"constraintlayout\", version.ref = \"constraintlayout\" }\r\n\r\n# Activity\r\nandroidx-activity = { group = \"androidx.activity\", name = \"activity\", version.ref = \"activity\" } # Base activity library\r\nandroidx-activity-compose = { group = \"androidx.activity\", name = \"activity-compose\", version.ref = \"activityComposeVersion\" }\r\n\r\n# Jetpack Compose\r\nandroidx-compose-bom = { group = \"androidx.compose\", name = \"compose-bom\", version.ref = \"androidxComposeBom\" }\r\nandroidx-compose-ui = { group = \"androidx.compose.ui\", name = \"ui\" } # No version needed here if using BOM\r\nandroidx-compose-ui-graphics = { group = \"androidx.compose.ui\", name = \"ui-graphics\" } # No version needed here if using BOM\r\nandroidx-compose-ui-tooling-preview = { group = \"androidx.compose.ui\", name = \"ui-tooling-preview\" } # No version needed here if using BOM\r\nandroidx-compose-material3 = { group = \"androidx.compose.material3\", name = \"material3\" } # No version needed here if using BOM\r\n# Add other Compose dependencies as needed, e.g., icons, foundation, runtime\r\n\r\n# Lifecycle (ViewModel, LiveData, etc.)\r\nandroidx-lifecycle-viewmodel-compose = { group = \"androidx.lifecycle\", name = \"lifecycle-viewmodel-compose\", version.ref = \"lifecycleVersion\" }\r\nandroidx-lifecycle-runtime-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-runtime-ktx\", version.ref = \"lifecycleVersion\" } # Often useful\r\n# Add other lifecycle components if needed:\r\n# androidx-lifecycle-livedata-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-livedata-ktx\", version.ref = \"lifecycleVersion\" }\r\n# androidx-lifecycle-runtime-compose = { group = \"androidx.lifecycle\", name = \"lifecycle-runtime-compose\", version.ref = \"lifecycleVersion\" }\r\n\r\n# Google Maps for Compose\r\ngoogle-maps-compose = { group = \"com.google.maps.android\", name = \"maps-compose\", version.ref = \"mapsComposeVersion\" }\r\ngoogle-play-services-maps = { group = \"com.google.android.gms\", name = \"play-services-maps\", version.ref = \"playServicesMapsVersion\" }\r\n\r\n\r\n[plugins]\r\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\r\nkotlin-android = { id = \"org.jetbrains.kotlin.android\", version.ref = \"kotlin\" }\r\n# Add other plugins here if needed, e.g.:\r\n# kotlin-serialization = { id = \"org.jetbrains.kotlin.plugin.serialization\", version.ref = \"kotlin\" }\r\n# ksp = { id = \"com.google.devtools.ksp\", version.ref = \"kspVersion\" } # You'd need to define kspVersion\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/gradle/libs.versions.toml	(date 1756271443008)
+@@ -20,7 +20,8 @@
+ # Google Maps Compose
+ mapsComposeVersion = "4.3.3" # CHECK FOR THE LATEST STABLE VERSION!
+ playServicesMapsVersion = "18.2.0" # CHECK FOR THE LATEST STABLE VERSION!
+-
++playServicesLocationVersion = "21.3.0"
++androidxNavigationVersion = "2.7.7"
+ 
+ [libraries]
+ # AndroidX Core
+@@ -62,7 +63,10 @@
+ # Google Maps for Compose
+ google-maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsComposeVersion" }
+ google-play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMapsVersion" }
+-
++google-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocationVersion" }
++androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
++androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
++# ...
+ 
+ [plugins]
+ android-application = { id = "com.android.application", version.ref = "agp" }
+@@ -70,3 +74,5 @@
+ # Add other plugins here if needed, e.g.:
+ # kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ # ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" } # You'd need to define kspVersion
++androidx-navigation-group = { group = "androidx.navigation" } # This defines a group, not common for this
++androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidxNavigationVersion" }
+Index: app/src/main/java/com/example/aidm/LoginActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport android.widget.Toast\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.activity.result.launch\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.fillMaxWidth\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.foundation.text.KeyboardOptions\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.setValue\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.semantics.error\r\nimport androidx.compose.ui.text.input.ImeAction\r\nimport androidx.compose.ui.text.input.KeyboardType\r\nimport androidx.compose.ui.text.input.PasswordVisualTransformation\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.compose.ui.unit.dp\r\nimport com.example.aidm.ui.theme.AIDMTheme // Assuming your theme is here\r\nimport kotlinx.coroutines.delay // For simulating login delay\r\n\r\nclass LoginActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContent {\r\n            AIDMTheme { // Replace AIDMTheme with your actual theme\r\n                LoginScreen(\r\n                    onLoginSuccess = {\r\n                        // Navigate to your main app screen (e.g., MainActivity)\r\n                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))\r\n                        finish() // Finish LoginActivity so user can't go back\r\n                    }\r\n                )\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@androidx.compose.runtime.Composable\r\nfun LoginScreen(onLoginSuccess: () -> Unit) {\r\n    var email by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(\"\") }\r\n    var password by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(\"\") }\r\n    var isLoading by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }\r\n    var loginError by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }\r\n    val context = LocalContext.current\r\n\r\n    // Simulate login logic\r\n    suspend fun performLogin(emailInput: String, passwordInput: String): Boolean {\r\n        isLoading = true\r\n        loginError = null\r\n        delay(1500) // Simulate network delay\r\n        // ** IMPORTANT: Replace this with your actual authentication logic **\r\n        // Example: Call your ViewModel/Repository to authenticate with a backend\r\n        return if (emailInput == \"user@example.com\" && passwordInput == \"password123\") {\r\n            isLoading = false\r\n            true\r\n        } else {\r\n            isLoading = false\r\n            loginError = \"Invalid email or password.\"\r\n            false\r\n        }\r\n    }\r\n\r\n    androidx.compose.material3.Surface(\r\n        modifier = Modifier.fillMaxSize(),\r\n        color = androidx.compose.material3.MaterialTheme.colorScheme.background\r\n    ) {\r\n        androidx.compose.foundation.layout.Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(32.dp),\r\n            verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,\r\n            horizontalAlignment = Alignment.CenterHorizontally\r\n        ) {\r\n            androidx.compose.material3.Text(\r\n                text = \"Welcome Back!\",\r\n                style = androidx.compose.material3.MaterialTheme.typography.headlineLarge,\r\n                color = androidx.compose.material3.MaterialTheme.colorScheme.primary\r\n            )\r\n            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(8.dp))\r\n            androidx.compose.material3.Text(\r\n                text = \"Login to continue\",\r\n                style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,\r\n                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant\r\n            )\r\n            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(32.dp))\r\n\r\n            androidx.compose.material3.OutlinedTextField(\r\n                value = email,\r\n                onValueChange = { email = it },\r\n                label = { androidx.compose.material3.Text(\"Email Address\") },\r\n                singleLine = true,\r\n                keyboardOptions = KeyboardOptions(\r\n                    keyboardType = KeyboardType.Email,\r\n                    imeAction = ImeAction.Next\r\n                ),\r\n                modifier = Modifier.fillMaxWidth(),\r\n                isError = loginError != null\r\n            )\r\n            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))\r\n\r\n            androidx.compose.material3.OutlinedTextField(\r\n                value = password,\r\n                onValueChange = { password = it },\r\n                label = { androidx.compose.material3.Text(\"Password\") },\r\n                singleLine = true,\r\n                visualTransformation = PasswordVisualTransformation(),\r\n                keyboardOptions = KeyboardOptions(\r\n                    keyboardType = KeyboardType.Password,\r\n                    imeAction = ImeAction.Done\r\n                ),\r\n                modifier = Modifier.fillMaxWidth(),\r\n                isError = loginError != null\r\n            )\r\n\r\n            loginError?.let {\r\n                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(8.dp))\r\n                androidx.compose.material3.Text(\r\n                    text = it,\r\n                    color = androidx.compose.material3.MaterialTheme.colorScheme.error,\r\n                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall\r\n                )\r\n            }\r\n\r\n            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(24.dp))\r\n\r\n            androidx.compose.material3.Button(\r\n                onClick = {\r\n                    if (email.isNotBlank() && password.isNotBlank()) {\r\n                        // Launch a coroutine to perform login (since it's a suspend function)\r\n                        // In a real app, this would likely be handled in a ViewModel\r\n                        // For simplicity, launching directly here.\r\n                        kotlinx.coroutines.GlobalScope.launch { // Use a proper scope in real app\r\n                            if (performLogin(email, password)) {\r\n                                onLoginSuccess()\r\n                            }\r\n                        }\r\n                    } else {\r\n                        Toast.makeText(context, \"Please enter email and password\", Toast.LENGTH_SHORT).show()\r\n                        loginError = \"Email and password cannot be empty.\"\r\n                    }\r\n                },\r\n                modifier = Modifier.fillMaxWidth(),\r\n                enabled = !isLoading\r\n            ) {\r\n                if (isLoading) {\r\n                    androidx.compose.material3.CircularProgressIndicator(\r\n                        modifier = Modifier.size(24.dp),\r\n                        color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary\r\n                    )\r\n                } else {\r\n                    androidx.compose.material3.Text(\"Login\")\r\n                }\r\n            }\r\n\r\n            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))\r\n\r\n            androidx.compose.material3.TextButton(onClick = { /* TODO: Handle forgot password */ }) {\r\n                androidx.compose.material3.Text(\"Forgot Password?\")\r\n            }\r\n            androidx.compose.material3.TextButton(onClick = { /* TODO: Navigate to Sign Up screen */ }) {\r\n                androidx.compose.material3.Text(\"Don't have an account? Sign Up\")\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Preview(showBackground = true)\r\n@androidx.compose.runtime.Composable\r\nfun LoginScreenPreview() {\r\n    AIDMTheme {\r\n        LoginScreen(onLoginSuccess = {})\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/LoginActivity.kt b/app/src/main/java/com/example/aidm/LoginActivity.kt
+--- a/app/src/main/java/com/example/aidm/LoginActivity.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/LoginActivity.kt	(date 1756135126908)
+@@ -5,39 +5,30 @@
+ import android.widget.Toast
+ import androidx.activity.ComponentActivity
+ import androidx.activity.compose.setContent
+-import androidx.activity.result.launch
+-import androidx.compose.foundation.background
+ import androidx.compose.foundation.layout.*
+-import androidx.compose.foundation.layout.fillMaxSize
+-import androidx.compose.foundation.layout.fillMaxWidth
+-import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.text.KeyboardOptions
+ import androidx.compose.material3.*
+ import androidx.compose.runtime.*
+-import androidx.compose.runtime.getValue
+-import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Alignment
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.platform.LocalContext
+-import androidx.compose.ui.semantics.error
+ import androidx.compose.ui.text.input.ImeAction
+ import androidx.compose.ui.text.input.KeyboardType
+ import androidx.compose.ui.text.input.PasswordVisualTransformation
+ import androidx.compose.ui.tooling.preview.Preview
+ import androidx.compose.ui.unit.dp
+-import com.example.aidm.ui.theme.AIDMTheme // Assuming your theme is here
+-import kotlinx.coroutines.delay // For simulating login delay
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.launch
+ 
+ class LoginActivity : ComponentActivity() {
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContent {
+-            AIDMTheme { // Replace AIDMTheme with your actual theme
++            AIDMTheme { // Make sure Theme.kt exists in ui/theme
+                 LoginScreen(
+                     onLoginSuccess = {
+-                        // Navigate to your main app screen (e.g., MainActivity)
+                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+-                        finish() // Finish LoginActivity so user can't go back
++                        finish()
+                     }
+                 )
+             }
+@@ -45,21 +36,19 @@
+     }
+ }
+ 
+-@androidx.compose.runtime.Composable
++@Composable
+ fun LoginScreen(onLoginSuccess: () -> Unit) {
+-    var email by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+-    var password by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+-    var isLoading by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+-    var loginError by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
++    var email by remember { mutableStateOf("") }
++    var password by remember { mutableStateOf("") }
++    var isLoading by remember { mutableStateOf(false) }
++    var loginError by remember { mutableStateOf<String?>(null) }
+     val context = LocalContext.current
++    val coroutineScope = rememberCoroutineScope()
+ 
+-    // Simulate login logic
+     suspend fun performLogin(emailInput: String, passwordInput: String): Boolean {
+         isLoading = true
+         loginError = null
+-        delay(1500) // Simulate network delay
+-        // ** IMPORTANT: Replace this with your actual authentication logic **
+-        // Example: Call your ViewModel/Repository to authenticate with a backend
++        delay(1500) // Simulate API call
+         return if (emailInput == "user@example.com" && passwordInput == "password123") {
+             isLoading = false
+             true
+@@ -70,34 +59,34 @@
+         }
+     }
+ 
+-    androidx.compose.material3.Surface(
++    Surface(
+         modifier = Modifier.fillMaxSize(),
+-        color = androidx.compose.material3.MaterialTheme.colorScheme.background
++        color = MaterialTheme.colorScheme.background
+     ) {
+-        androidx.compose.foundation.layout.Column(
++        Column(
+             modifier = Modifier
+                 .fillMaxSize()
+                 .padding(32.dp),
+-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
++            verticalArrangement = Arrangement.Center,
+             horizontalAlignment = Alignment.CenterHorizontally
+         ) {
+-            androidx.compose.material3.Text(
++            Text(
+                 text = "Welcome Back!",
+-                style = androidx.compose.material3.MaterialTheme.typography.headlineLarge,
+-                color = androidx.compose.material3.MaterialTheme.colorScheme.primary
++                style = MaterialTheme.typography.headlineLarge,
++                color = MaterialTheme.colorScheme.primary
+             )
+-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(8.dp))
+-            androidx.compose.material3.Text(
++            Spacer(modifier = Modifier.height(8.dp))
++            Text(
+                 text = "Login to continue",
+-                style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+-                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
++                style = MaterialTheme.typography.bodyMedium,
++                color = MaterialTheme.colorScheme.onSurfaceVariant
+             )
+-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(32.dp))
++            Spacer(modifier = Modifier.height(32.dp))
+ 
+-            androidx.compose.material3.OutlinedTextField(
++            OutlinedTextField(
+                 value = email,
+                 onValueChange = { email = it },
+-                label = { androidx.compose.material3.Text("Email Address") },
++                label = { Text("Email Address") },
+                 singleLine = true,
+                 keyboardOptions = KeyboardOptions(
+                     keyboardType = KeyboardType.Email,
+@@ -106,12 +95,12 @@
+                 modifier = Modifier.fillMaxWidth(),
+                 isError = loginError != null
+             )
+-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
++            Spacer(modifier = Modifier.height(16.dp))
+ 
+-            androidx.compose.material3.OutlinedTextField(
++            OutlinedTextField(
+                 value = password,
+                 onValueChange = { password = it },
+-                label = { androidx.compose.material3.Text("Password") },
++                label = { Text("Password") },
+                 singleLine = true,
+                 visualTransformation = PasswordVisualTransformation(),
+                 keyboardOptions = KeyboardOptions(
+@@ -123,23 +112,20 @@
+             )
+ 
+             loginError?.let {
+-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(8.dp))
+-                androidx.compose.material3.Text(
++                Spacer(modifier = Modifier.height(8.dp))
++                Text(
+                     text = it,
+-                    color = androidx.compose.material3.MaterialTheme.colorScheme.error,
+-                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall
++                    color = MaterialTheme.colorScheme.error,
++                    style = MaterialTheme.typography.bodySmall
+                 )
+             }
+ 
+-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(24.dp))
++            Spacer(modifier = Modifier.height(24.dp))
+ 
+-            androidx.compose.material3.Button(
++            Button(
+                 onClick = {
+                     if (email.isNotBlank() && password.isNotBlank()) {
+-                        // Launch a coroutine to perform login (since it's a suspend function)
+-                        // In a real app, this would likely be handled in a ViewModel
+-                        // For simplicity, launching directly here.
+-                        kotlinx.coroutines.GlobalScope.launch { // Use a proper scope in real app
++                        coroutineScope.launch {
+                             if (performLogin(email, password)) {
+                                 onLoginSuccess()
+                             }
+@@ -153,29 +139,29 @@
+                 enabled = !isLoading
+             ) {
+                 if (isLoading) {
+-                    androidx.compose.material3.CircularProgressIndicator(
++                    CircularProgressIndicator(
+                         modifier = Modifier.size(24.dp),
+-                        color = androidx.compose.material3.MaterialTheme.colorScheme.onPrimary
++                        color = MaterialTheme.colorScheme.onPrimary
+                     )
+                 } else {
+-                    androidx.compose.material3.Text("Login")
++                    Text("Login")
+                 }
+             }
+ 
+-            androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
++            Spacer(modifier = Modifier.height(16.dp))
+ 
+-            androidx.compose.material3.TextButton(onClick = { /* TODO: Handle forgot password */ }) {
+-                androidx.compose.material3.Text("Forgot Password?")
++            TextButton(onClick = { /* TODO: Forgot password */ }) {
++                Text("Forgot Password?")
+             }
+-            androidx.compose.material3.TextButton(onClick = { /* TODO: Navigate to Sign Up screen */ }) {
+-                androidx.compose.material3.Text("Don't have an account? Sign Up")
++            TextButton(onClick = { /* TODO: Navigate to Sign Up */ }) {
++                Text("Don't have an account? Sign Up")
+             }
+         }
+     }
+ }
+ 
+ @Preview(showBackground = true)
+-@androidx.compose.runtime.Composable
++@Composable
+ fun LoginScreenPreview() {
+     AIDMTheme {
+         LoginScreen(onLoginSuccess = {})
+Index: app/src/main/java/com/example/aidm/HomeActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport android.content.Intent\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.compose.setContent\r\nimport androidx.compose.foundation.layout.Box\r\nimport androidx.compose.foundation.layout.Column\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.filled.AccountCircle\r\nimport androidx.compose.material.icons.filled.Campaign // For Announcements\r\nimport androidx.compose.material.icons.filled.Gite // For Shelters\r\nimport androidx.compose.material.icons.filled.Home // Example for Dashboard\r\nimport androidx.compose.material.icons.filled.Map\r\nimport androidx.compose.material.icons.filled.MedicalServices // For First Aid\r\nimport androidx.compose.material.icons.filled.ReportProblem\r\nimport androidx.compose.material.icons.outlined.AccountCircle\r\nimport androidx.compose.material.icons.outlined.Campaign\r\nimport androidx.compose.material.icons.outlined.Gite\r\nimport androidx.compose.material.icons.outlined.Home\r\nimport androidx.compose.material.icons.outlined.Map\r\nimport androidx.compose.material.icons.outlined.MedicalServices\r\nimport androidx.compose.material.icons.outlined.ReportProblem\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.material3.NavigationBarItem\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.setValue\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.graphics.vector.ImageVector\r\nimport androidx.compose.ui.platform.LocalContext\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.compose.ui.unit.dp\r\nimport com.example.aidm.ui.theme.AIDMTheme\r\n\r\n// Sealed class to represent different screens accessible from Home\r\nsealed class HomeScreen(\r\n    val route: String,\r\n    val title: String,\r\n    val selectedIcon: ImageVector,\r\n    val unselectedIcon: ImageVector\r\n) {\r\n    object Dashboard : HomeScreen(\"dashboard\", \"Dashboard\", Icons.Filled.Home, Icons.Outlined.Home)\r\n    object MapView : HomeScreen(\"map\", \"Map\", Icons.Filled.Map, Icons.Outlined.Map)\r\n    object Report : HomeScreen(\"report\", \"Report Incident\", Icons.Filled.ReportProblem, Icons.Outlined.ReportProblem)\r\n    object Shelters : HomeScreen(\"shelters\", \"Shelters\", Icons.Filled.Gite, Icons.Outlined.Gite)\r\n    object FirstAid : HomeScreen(\"first_aid\", \"First Aid\", Icons.Filled.MedicalServices, Icons.Outlined.MedicalServices)\r\n    object Announcements : HomeScreen(\"announcements\", \"Announcements\", Icons.Filled.Campaign, Icons.Outlined.Campaign)\r\n    object Profile : HomeScreen(\"profile\", \"Profile\", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)\r\n    // Add other primary navigation destinations here\r\n}\r\n\r\nclass HomeActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        setContent {\r\n            AIDMTheme {\r\n                MainHomeScreen()\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class) // For TopAppBar and NavigationBar\r\n@androidx.compose.runtime.Composable\r\nfun MainHomeScreen() {\r\n    val context = LocalContext.current\r\n    var currentScreen by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<HomeScreen>(HomeScreen.Dashboard) }\r\n\r\n    val navigationItems = listOf(\r\n        HomeScreen.Dashboard,\r\n        HomeScreen.MapView,\r\n        HomeScreen.Report,\r\n        HomeScreen.Shelters,\r\n        // Add more items to the bottom bar if they fit, or move some to a NavDrawer/menu\r\n        HomeScreen.Profile\r\n    )\r\n\r\n    androidx.compose.material3.Scaffold(\r\n        topBar = {\r\n            androidx.compose.material3.TopAppBar(\r\n                title = { androidx.compose.material3.Text(currentScreen.title) },\r\n                colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(\r\n                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primaryContainer,\r\n                    titleContentColor = androidx.compose.material3.MaterialTheme.colorScheme.onPrimaryContainer\r\n                )\r\n                // You can add navigationIcon for a drawer or actions items here\r\n            )\r\n        },\r\n        bottomBar = {\r\n            androidx.compose.material3.NavigationBar(\r\n                containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,\r\n                contentColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface\r\n            ) {\r\n                navigationItems.forEach { screen ->\r\n                    NavigationBarItem(\r\n                        icon = {\r\n                            androidx.compose.material3.Icon(\r\n                                imageVector = if (currentScreen.route == screen.route) screen.selectedIcon else screen.unselectedIcon,\r\n                                contentDescription = screen.title\r\n                            )\r\n                        },\r\n                        label = { androidx.compose.material3.Text(screen.title) },\r\n                        selected = currentScreen.route == screen.route,\r\n                        onClick = {\r\n                            if (currentScreen.route != screen.route) { // Prevent reloading same screen\r\n                                currentScreen = screen // Update the content\r\n                                // Actual navigation to other activities happens in HomeContent\r\n                            }\r\n                        },\r\n                        colors = androidx.compose.material3.NavigationBarItemDefaults.colors(\r\n                            selectedIconColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,\r\n                            unselectedIconColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,\r\n                            selectedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,\r\n                            unselectedTextColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,\r\n                            indicatorColor = androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer // Ripple color\r\n                        )\r\n                    )\r\n                }\r\n            }\r\n        }\r\n    ) { innerPadding ->\r\n        HomeContent(\r\n            modifier = Modifier.padding(innerPadding),\r\n            currentScreen = currentScreen,\r\n            onNavigateToActivity = { activityClass ->\r\n                context.startActivity(Intent(context, activityClass))\r\n            }\r\n        )\r\n    }\r\n}\r\n\r\n@androidx.compose.runtime.Composable\r\nfun HomeContent(\r\n    modifier: Modifier = Modifier,\r\n    currentScreen: HomeScreen,\r\n    onNavigateToActivity: (Class<out ComponentActivity>) -> Unit\r\n) {\r\n    // This is where you decide what content to show based on `currentScreen`\r\n    // For screens that are separate Activities, we trigger navigation.\r\n    // For screens that are simple Composables, we can display them directly.\r\n\r\n    androidx.compose.runtime.LaunchedEffect(currentScreen) { // React to changes in currentScreen\r\n        when (currentScreen) {\r\n            HomeScreen.MapView -> onNavigateToActivity(MapActivity::class.java)\r\n            HomeScreen.Report -> onNavigateToActivity(ReportIncidentActivity::class.java)\r\n            HomeScreen.Shelters -> onNavigateToActivity(ShelterListActivity::class.java)\r\n            HomeScreen.FirstAid -> onNavigateToActivity(FirstAidActivity::class.java) // Assuming you have this\r\n            HomeScreen.Announcements -> onNavigateToActivity(AnnouncementsActivity::class.java) // Assuming\r\n            HomeScreen.Profile -> onNavigateToActivity(ProfileActivity::class.java) // Assuming\r\n            // For Dashboard or other simple composable-only screens, they'd be handled below\r\n            else -> { /* Current screen is handled by the Column below or is a no-op for activity nav */ }\r\n        }\r\n    }\r\n\r\n    // Display content for screens that are NOT separate activities, or a placeholder\r\n    Column(\r\n        modifier = modifier.fillMaxSize(),\r\n        horizontalAlignment = Alignment.CenterHorizontally,\r\n        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center\r\n    ) {\r\n        when (currentScreen) {\r\n            HomeScreen.Dashboard -> {\r\n                androidx.compose.material3.Text(\"Welcome to the Dashboard!\", style = androidx.compose.material3.MaterialTheme.typography.headlineMedium)\r\n                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))\r\n                androidx.compose.material3.Button(onClick = { onNavigateToActivity(RouteActivity::class.java) }) { // Example Button\r\n                    androidx.compose.material3.Text(\"Show Example Route\")\r\n                }\r\n                // Add more dashboard elements here\r\n            }\r\n            // Add cases for other screens if they are simple composables and not full Activities\r\n            // e.g., if Profile was a simple Composable screen within HomeActivity:\r\n            // HomeScreen.Profile -> ProfileContentComposable()\r\n            else -> {\r\n                // This state might be transient while an Activity is being launched.\r\n                // Or if it's a screen handled by LaunchedEffect above, this is a fallback.\r\n                androidx.compose.material3.Text(\r\n                    \"Selected: ${currentScreen.title}\",\r\n                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge\r\n                )\r\n                androidx.compose.material3.Text(\r\n                    \"(Navigating to separate activity if applicable)\",\r\n                    style = androidx.compose.material3.MaterialTheme.typography.bodySmall\r\n                )\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n\r\n@Preview(showBackground = true)\r\n@androidx.compose.runtime.Composable\r\nfun MainHomeScreenPreview() {\r\n    AIDMTheme {\r\n        MainHomeScreen()\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/HomeActivity.kt b/app/src/main/java/com/example/aidm/HomeActivity.kt
+--- a/app/src/main/java/com/example/aidm/HomeActivity.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/HomeActivity.kt	(date 1756271442986)
+@@ -11,7 +11,8 @@
+ import androidx.compose.material.icons.Icons
+ import androidx.compose.material.icons.filled.AccountCircle
+ import androidx.compose.material.icons.filled.Campaign // For Announcements
+-import androidx.compose.material.icons.filled.Gite // For Shelters
++import androidx.compose.material.icons.filled.NightShelter // For Shelters
++import androidx.compose.material.icons.outlined.NightShelter
+ import androidx.compose.material.icons.filled.Home // Example for Dashboard
+ import androidx.compose.material.icons.filled.Map
+ import androidx.compose.material.icons.filled.MedicalServices // For First Aid
+@@ -46,7 +47,7 @@
+     object Dashboard : HomeScreen("dashboard", "Dashboard", Icons.Filled.Home, Icons.Outlined.Home)
+     object MapView : HomeScreen("map", "Map", Icons.Filled.Map, Icons.Outlined.Map)
+     object Report : HomeScreen("report", "Report Incident", Icons.Filled.ReportProblem, Icons.Outlined.ReportProblem)
+-    object Shelters : HomeScreen("shelters", "Shelters", Icons.Filled.Gite, Icons.Outlined.Gite)
++    object Shelters : HomeScreen("shelters", "Shelters", Icons.Filled.NightShelter , Icons.Outlined.NightShelter)
+     object FirstAid : HomeScreen("first_aid", "First Aid", Icons.Filled.MedicalServices, Icons.Outlined.MedicalServices)
+     object Announcements : HomeScreen("announcements", "Announcements", Icons.Filled.Campaign, Icons.Outlined.Campaign)
+     object Profile : HomeScreen("profile", "Profile", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
+Index: app/src/main/java/com/example/aidm/FirstAidScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport androidx.compose.foundation.layout.Column\r\nimport androidx.compose.foundation.layout.Spacer\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.height\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.material3.MaterialTheme\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.LaunchedEffect\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.mutableStateOf\r\nimport androidx.compose.runtime.remember\r\nimport androidx.compose.runtime.rememberCoroutineScope\r\nimport androidx.compose.runtime.setValue\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.unit.dp\r\nimport com.aidm.app.data.FakeRepo // Assuming this path is correct for your FakeRepo\r\nimport com.aidm.app.ui.components.Loading // Assuming this path is correct for your Loading component\r\n\r\nimport kotlinx.coroutines.launch\r\n\r\n@Composable\r\nfun FirstAidScreen() { // This remains your Composable function\r\n    val repo = remember { FakeRepo() }\r\n    var data by remember { mutableStateOf<Map<String, List<String>>?>(null) }\r\n    val scope = rememberCoroutineScope()\r\n\r\n    LaunchedEffect(Unit) {\r\n        scope.launch {\r\n            data = repo.getFirstAidTopics()\r\n        }\r\n    }\r\n\r\n    Column(\r\n        Modifier\r\n            .fillMaxSize()\r\n            .padding(16.dp)\r\n    ) {\r\n        Text(\"First Aid Guide\", style = MaterialTheme.typography.headlineSmall)\r\n        Spacer(Modifier.height(8.dp))\r\n\r\n        val topics = data\r\n        if (topics == null) {\r\n            Loading()\r\n            return // Prevent further execution if topics are null\r\n        }\r\n\r\n        topics.forEach { (title, steps) ->\r\n            Text(\"• $title\", style = MaterialTheme.typography.titleMedium)\r\n            steps.forEach { step ->\r\n                Text(\"   - $step\")\r\n            }\r\n            Spacer(Modifier.height(8.dp))\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/FirstAidScreen.kt b/app/src/main/java/com/example/aidm/FirstAidScreen.kt
+--- a/app/src/main/java/com/example/aidm/FirstAidScreen.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/FirstAidScreen.kt	(date 1756270635084)
+@@ -16,8 +16,8 @@
+ import androidx.compose.runtime.setValue
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.unit.dp
+-import com.aidm.app.data.FakeRepo // Assuming this path is correct for your FakeRepo
+-import com.aidm.app.ui.components.Loading // Assuming this path is correct for your Loading component
++import  com.example.aidm.FakeRepo // Assuming this path is correct for your FakeRepo
++import com.example.aidm.Loading // Assuming this path is correct for your Loading component
+ 
+ import kotlinx.coroutines.launch
+ 
+Index: app/src/main/java/com/example/aidm/AnnouncementsScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport com.aidm.app.data.FakeRepo\r\nimport com.aidm.app.ui.components.Loading\r\nimport kotlinx.coroutines.launch\r\n\r\n@Composable\r\nfun AnnouncementsScreen() {\r\n    val repo = remember { FakeRepo() }\r\n    var msgs by remember { mutableStateOf<List<String>?>(null) }\r\n    val scope = rememberCoroutineScope()\r\n\r\n    LaunchedEffect(Unit) { scope.launch { msgs = repo.getAnnouncements() } }\r\n\r\n    Column(Modifier.fillMaxSize().padding(16.dp)) {\r\n        Text(\"Official Announcements\", style = MaterialTheme.typography.headlineSmall)\r\n        Spacer(Modifier.height(8.dp))\r\n        val list = msgs\r\n        if (list == null) Loading() else list.forEach {\r\n            Card(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {\r\n                Text(it, Modifier.padding(12.dp))\r\n            }\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/AnnouncementsScreen.kt b/app/src/main/java/com/example/aidm/AnnouncementsScreen.kt
+--- a/app/src/main/java/com/example/aidm/AnnouncementsScreen.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/AnnouncementsScreen.kt	(date 1756270635028)
+@@ -4,8 +4,9 @@
+ import androidx.compose.material3.*
+ import androidx.compose.runtime.*
+ import androidx.compose.ui.Modifier
+-import com.aidm.app.data.FakeRepo
+-import com.aidm.app.ui.components.Loading
++import androidx.compose.ui.unit.dp
++import com.example.aidm.FakeRepo
++import com.example.aidm.Loading
+ import kotlinx.coroutines.launch
+ 
+ @Composable
+Index: app/src/main/java/com/example/aidm/LoginScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.aidm\r\n\r\nimport androidx.activity.ComponentActivity // Or import android.app.Activity, etc.\r\nimport android.os.Bundle\r\nimport androidx.compose.foundation.layout.Column\r\nimport androidx.compose.foundation.layout.Spacer\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.fillMaxWidth\r\nimport androidx.compose.foundation.layout.height\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.material3.Button\r\nimport androidx.compose.material3.MaterialTheme\r\nimport androidx.compose.material3.OutlinedTextField\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.mutableStateOf\r\nimport androidx.compose.runtime.remember\r\nimport androidx.compose.runtime.setValue\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.unit.dp // Required for specifying dimensions like padding and height\r\n\r\n@Composable\r\nfun LoginScreen(onLogin: () -> Unit) {\r\n    var phone by remember { mutableStateOf(\"\") }\r\n    var name by remember { mutableStateOf(\"\") }\r\n\r\n    Column(\r\n        Modifier\r\n            .fillMaxSize()\r\n            .padding(16.dp) // Added .dp for padding\r\n    ) {\r\n        Text(\r\n            text = \"Welcome\", // Explicitly named the 'text' parameter for clarity\r\n            style = MaterialTheme.typography.headlineSmall\r\n        )\r\n\r\n        Spacer(Modifier.height(16.dp)) // Added a little space before the fields\r\n\r\n        OutlinedTextField(\r\n            value = name,\r\n            onValueChange = { name = it },\r\n            label = { Text(\"Name\") },\r\n            modifier = Modifier.fillMaxWidth()\r\n        )\r\n\r\n        Spacer(Modifier.height(8.dp)) // Added space between text fields\r\n\r\n        OutlinedTextField(\r\n            value = phone,\r\n            onValueChange = { phone = it },\r\n            label = { Text(\"Phone\") },\r\n            modifier = Modifier.fillMaxWidth()\r\n        )\r\n\r\n        Spacer(Modifier.height(24.dp)) // Increased space before the button for better visual separation\r\n\r\n        Button(\r\n            onClick = onLogin,\r\n            modifier = Modifier.fillMaxWidth()\r\n        ) {\r\n            Text(\"Continue\")\r\n        }\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/LoginScreen.kt b/app/src/main/java/com/example/aidm/LoginScreen.kt
+--- a/app/src/main/java/com/example/aidm/LoginScreen.kt	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/java/com/example/aidm/LoginScreen.kt	(date 1756135271921)
+@@ -1,66 +1,0 @@
+-package com.example.aidm
+-
+-import androidx.activity.ComponentActivity // Or import android.app.Activity, etc.
+-import android.os.Bundle
+-import androidx.compose.foundation.layout.Column
+-import androidx.compose.foundation.layout.Spacer
+-import androidx.compose.foundation.layout.fillMaxSize
+-import androidx.compose.foundation.layout.fillMaxWidth
+-import androidx.compose.foundation.layout.height
+-import androidx.compose.foundation.layout.padding
+-import androidx.compose.material3.Button
+-import androidx.compose.material3.MaterialTheme
+-import androidx.compose.material3.OutlinedTextField
+-import androidx.compose.material3.Text
+-import androidx.compose.runtime.Composable
+-import androidx.compose.runtime.getValue
+-import androidx.compose.runtime.mutableStateOf
+-import androidx.compose.runtime.remember
+-import androidx.compose.runtime.setValue
+-import androidx.compose.ui.Modifier
+-import androidx.compose.ui.unit.dp // Required for specifying dimensions like padding and height
+-
+-@Composable
+-fun LoginScreen(onLogin: () -> Unit) {
+-    var phone by remember { mutableStateOf("") }
+-    var name by remember { mutableStateOf("") }
+-
+-    Column(
+-        Modifier
+-            .fillMaxSize()
+-            .padding(16.dp) // Added .dp for padding
+-    ) {
+-        Text(
+-            text = "Welcome", // Explicitly named the 'text' parameter for clarity
+-            style = MaterialTheme.typography.headlineSmall
+-        )
+-
+-        Spacer(Modifier.height(16.dp)) // Added a little space before the fields
+-
+-        OutlinedTextField(
+-            value = name,
+-            onValueChange = { name = it },
+-            label = { Text("Name") },
+-            modifier = Modifier.fillMaxWidth()
+-        )
+-
+-        Spacer(Modifier.height(8.dp)) // Added space between text fields
+-
+-        OutlinedTextField(
+-            value = phone,
+-            onValueChange = { phone = it },
+-            label = { Text("Phone") },
+-            modifier = Modifier.fillMaxWidth()
+-        )
+-
+-        Spacer(Modifier.height(24.dp)) // Increased space before the button for better visual separation
+-
+-        Button(
+-            onClick = onLogin,
+-            modifier = Modifier.fillMaxWidth()
+-        ) {
+-            Text("Continue")
+-        }
+-    }
+-}
+-
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    package=\"com.example.aidm\">\r\n\r\n    <uses-permission android:name=\"android.permission.INTERNET\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />\r\n    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\r\n        android:fullBackupContent=\"@xml/backup_rules\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.AIDM\"\r\n        tools:targetApi=\"31\">\r\n        <activity\r\n            android:name=\".HomeActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".MapActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".RouteActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".ReportIncidentActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".LoginActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".SplashActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".ShelterListActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".ShelterDetailActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".ProfileActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".SettingsActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".FirstAidActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".FirstAidActivity\"\r\n            android:exported=\"false\"\r\n            tools:ignore=\"DuplicateActivity\" />\r\n        <activity\r\n            android:name=\".MainActivity\"\r\n            android:exported=\"true\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity> <!-- Add your other activities here. Ensure the class files exist. -->\r\n        <!-- Example: <activity android:name=\".YourOtherActivity\" android:exported=\"false\" /> -->\r\n        <activity\r\n            android:name=\".Loading\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".AnnouncementsActivity\"\r\n            android:exported=\"false\" />\r\n        <activity\r\n            android:name=\".TopBarDemoActivity\"\r\n            android:exported=\"false\" />\r\n        <!--\r\n            IMPORTANT: If 'Theme', 'Models', 'Routes', or 'AndroidManifest'\r\n            are NOT actual Activity classes (i.e., .kt or .java files extending Activity),\r\n            DELETE these lines. Declaring non-activities here WILL cause errors.\r\n        -->\r\n        <!--\r\n        <activity android:name=\".Theme\" android:exported=\"false\" />\r\n        <activity android:name=\".Models\" android:exported=\"false\" />\r\n        <activity android:name=\".Routes\" android:exported=\"false\" />\r\n        <activity android:name=\".AndroidManifest\" android:exported=\"false\" />\r\n        -->\r\n        <!-- Google Maps API Key -->\r\n        <meta-data\r\n            android:name=\"com.google.android.geo.API_KEY\"\r\n            android:value=\"AIzaSyAGM93FGdxip_ijWET7BRUTX02hE95TTPo\" />\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision da848cf074bd0856b6f52c8bf976daa7ed0b991f)
++++ b/app/src/main/AndroidManifest.xml	(date 1756268824648)
+@@ -19,6 +19,9 @@
+         android:theme="@style/Theme.AIDM"
+         tools:targetApi="31">
+         <activity
++            android:name=".FakeRepo"
++            android:exported="false" />
++        <activity
+             android:name=".HomeActivity"
+             android:exported="false" />
+         <activity
+Index: app/src/main/java/com/example/aidm/FakeRepo.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/aidm/FakeRepo.kt b/app/src/main/java/com/example/aidm/FakeRepo.kt
+new file mode 100644
+--- /dev/null	(date 1756270634981)
++++ b/app/src/main/java/com/example/aidm/FakeRepo.kt	(date 1756270634981)
+@@ -0,0 +1,74 @@
++package com.example.aidm // Or your data package
++
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.coroutines.flow.asStateFlow
++import kotlinx.coroutines.sync.Mutex
++import kotlinx.coroutines.sync.withLock
++
++// Assuming IncidentData is still used by other parts of your app using FakeRepo
++data class IncidentData(
++    val type: String,
++    val description: String,
++    val latitude: Double,
++    val longitude: Double,
++    val timestamp: Long = System.currentTimeMillis()
++)
++
++class FakeRepo {
++    private val mutex = Mutex()
++    private val _incidents = MutableStateFlow<List<IncidentData>>(emptyList())
++    val incidents: StateFlow<List<IncidentData>> = _incidents.asStateFlow()
++
++    suspend fun submitIncident(type: String, description: String, lat: Double, lng: Double): Boolean {
++        delay(500)
++        val newIncident = IncidentData(type, description, lat, lng)
++        mutex.withLock {
++            _incidents.value = _incidents.value + newIncident
++        }
++        return true
++    }
++
++    fun getIncidentsFlow(): StateFlow<List<IncidentData>> {
++        return incidents
++    }
++
++    suspend fun getAnnouncements(): List<String> {
++        delay(200)
++        return _incidents.value.map {
++            "New Incident Reported: ${it.type} - ${it.description.take(50)}${if (it.description.length > 50) "..." else ""}"
++        }.reversed()
++    }
++
++    // --- ADD THIS METHOD ---
++    suspend fun getFirstAidTopics(): Map<String, List<String>> {
++        delay(800) // Simulate fetching data
++        return mapOf(
++            "Cuts and Scrapes" to listOf(
++                "Stop the bleeding by applying pressure.",
++                "Clean the wound with water.",
++                "Apply an antibiotic ointment.",
++                "Cover the wound with a bandage."
++            ),
++            "Burns (Minor)" to listOf(
++                "Cool the burn with cool (not ice-cold) running water for 10-15 minutes.",
++                "Cover with a sterile non-adhesive bandage or clean cloth.",
++                "Do not apply ointments or butter."
++            ),
++            "Sprains" to listOf(
++                "Rest the injured limb.",
++                "Ice the area for 20 minutes at a time, several times a day.",
++                "Compress the area with an elastic bandage.",
++                "Elevate the injured limb above your heart."
++            ),
++            "Choking (Adult)" to listOf(
++                "Ask: 'Are you choking?'",
++                "If the person can cough or speak, encourage them to keep coughing.",
++                "If they cannot speak, breathe, or cough, perform the Heimlich maneuver (abdominal thrusts).",
++                "Call for emergency help immediately if the blockage isn't cleared."
++            )
++        )
++    }
++}
++
