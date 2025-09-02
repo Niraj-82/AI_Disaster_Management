@@ -18,14 +18,6 @@ data class IncidentData(
     val timestamp: Long = System.currentTimeMillis()
 )
 
-data class Shelter(
-    val id: String,
-    val name: String,
-    val address: String,
-    val capacity: Int,
-    val available: Int
-)
-
 
 // --- Single, Unified FakeRepo Class ---
 
@@ -37,10 +29,10 @@ class FakeRepo {
     // --- Shelter Data ---
 
     private val shelters = listOf(
-        Shelter("1", "North Community Center", "123 Maple St", 100, 85),
-        Shelter("2", "Southside High School Gym", "456 Oak Ave", 250, 120),
-        Shelter("3", "West End Church Hall", "789 Pine Ln", 50, 15),
-        Shelter("4", "Downtown Convention Center", "101 Main Blvd", 1000, 950)
+        Shelter("1", "North Community Center", 19.0761, 72.8778, 100, 85, "123 Maple St"),
+        Shelter("2", "Southside High School Gym", 19.0762, 72.8779, 250, 120, "456 Oak Ave"),
+        Shelter("3", "West End Church Hall", 19.0763, 72.8780, 50, 15, "789 Pine Ln"),
+        Shelter("4", "Downtown Convention Center", 19.0764, 72.8781, 1000, 950, "101 Main Blvd")
     )
 
     /**

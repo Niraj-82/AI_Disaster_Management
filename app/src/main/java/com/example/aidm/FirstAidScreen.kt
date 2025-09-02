@@ -1,4 +1,4 @@
-package com.example.aidm // Or your actual UI package
+package com.example.aidm
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,45 +21,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-// Assuming FakeRepo is in the same package or imported correctly
-// import com.example.aidm.data.FakeRepo // If FakeRepo is in a 'data' sub-package
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun FirstAidScreen(
-    // You might pass FakeRepo or a ViewModel that uses FakeRepo
-    // For simplicity, instantiating it here or using a shared ViewModel instance
-    // For a shared instance across screens, a ViewModel is preferred:
-    // viewModel: FirstAidViewModel = viewModel()
+    viewModel: FirstAidViewModel = viewModel()
 ) {
-    // If using a ViewModel:
-    // val repo = viewModel.getRepository()
+    val firstAidTopics by viewModel.firstAidTopics
+    val isLoading by viewModel.isLoading
+    val errorMessage by viewModel.errorMessage
 
-    // For direct use (or if ViewModel provides FakeRepo directly):
-    val repo = remember { FakeRepo() } // Or get from a shared ViewModel
-
-    var firstAidTopics by remember { mutableStateOf<Map<String, List<String>>?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    // Use LaunchedEffect to fetch data when the screen is first composed
-    LaunchedEffect(key1 = Unit) { // key1 = Unit ensures it runs once on composition
-        isLoading = true
-        errorMessage = null
-        try {
-            firstAidTopics = repo.getFirstAidTopics()
-        } catch (e: Exception) {
-            // In a real app, handle exceptions more gracefully (e.g., logging)
-            errorMessage = "Failed to load first aid topics: ${e.message}"
-        } finally {
-            isLoading = false
-        }
+    LaunchedEffect(key1 = Unit) {
+        viewModel.loadFirstAidTopics()
     }
 
     Column(
@@ -75,7 +53,6 @@ fun FirstAidScreen(
 
         when {
             isLoading -> {
-                // Show a loading indicator
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -84,7 +61,6 @@ fun FirstAidScreen(
                 }
             }
             errorMessage != null -> {
-                // Show an error message
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -97,7 +73,6 @@ fun FirstAidScreen(
                 }
             }
             firstAidTopics.isNullOrEmpty() -> {
-                // Show a message if no topics are available
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -109,10 +84,9 @@ fun FirstAidScreen(
                 }
             }
             else -> {
-                // Display the list of topics and their steps
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp) // Add padding at the bottom of the list
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(firstAidTopics!!.toList()) { (topicTitle, steps) ->
                         FirstAidTopicCard(title = topicTitle, steps = steps)
@@ -140,7 +114,7 @@ fun FirstAidTopicCard(title: String, steps: List<String>) {
             Spacer(Modifier.height(8.dp))
             steps.forEach { step ->
                 Text(
-                    text = step, // Assuming steps are already numbered or formatted
+                    text = step,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 4.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant

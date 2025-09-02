@@ -1,29 +1,34 @@
 package com.example.aidm
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.example.aidm.FakeRepo
-import com.example.aidm.ShelterListScreen
-import com.example.aidm.Loading
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-import androidx.activity.ComponentActivity
-import android.os.Bundle
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun ShelterDetailScreen(id: String) {
-    val repo = remember { FakeRepo() }
-    var shelter by remember { mutableStateOf<Shelter?>(null) }
-    val scope = rememberCoroutineScope()
+fun ShelterDetailScreen(id: String, viewModel: ShelterViewModel = viewModel()) {
+    val shelter by viewModel.shelter
 
     LaunchedEffect(id) {
-        scope.launch { shelter = repo.getShelter(id) }
+        viewModel.loadShelter(id)
     }
 
     val s = shelter
-    if (s == null) { Loading(); return }
+    if (s == null) {
+        Loading()
+        return
+    }
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Text(s.name, style = MaterialTheme.typography.headlineSmall)
         Spacer(Modifier.height(8.dp))

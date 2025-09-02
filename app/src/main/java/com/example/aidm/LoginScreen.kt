@@ -1,50 +1,43 @@
-import androidx.compose.foundation.layout.*
+package com.example.aidm
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.aidm.AIDMTheme // Assuming your theme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
-    var loginError by remember { mutableStateOf<String?>(null) }
-    val context = LocalContext.current // Used for Toasts or other context needs
-    val scope = rememberCoroutineScope() // Scope for launching coroutines tied to this Composable
+fun LoginScreen(
+    onLoginSuccess: () -> Unit,
+    onSignupClicked: () -> Unit,
+    viewModel: LoginViewModel = viewModel()
+) {
+    val uiState = viewModel.uiState
 
-    // --- Simulated Login Logic ---
-    // In a real app, this would be in a ViewModel and interact with a Repository/Backend.
-    suspend fun performLogin(emailInput: String, passwordInput: String): Boolean {
-        isLoading = true
-        loginError = null // Clear previous errors
-        delay(1500) // Simulate network delay
-
-        // ** IMPORTANT: Replace this with your actual authentication logic **
-        return if (emailInput == "user@example.com" && passwordInput == "password123") {
-            // Simulate successful login
-            true
-        } else {
-            // Simulate failed login
-            loginError = "Invalid email or password."
-            false
-        }.also {
-            isLoading = false // Ensure isLoading is set to false in all execution paths
-        }
+    LaunchedEffect(viewModel.loginEvent) {
+        viewModel.loginEvent.collect { onLoginSuccess() }
     }
-    // --- End of Simulated Login Logic ---
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -53,7 +46,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(32.dp), // Main padding for the content
+                .padding(32.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -68,77 +61,57 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Spacer(modifier = Modifier.height(32.dp)) // Space before form fields
+            Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
-                value = email,
-                onValueChange = {
-                    email = it
-                    loginError = null // Clear error when user types
-                },
+                value = uiState.email,
+                onValueChange = viewModel::onEmailChange,
                 label = { Text("Email Address") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next // Moves focus to next field
+                    imeAction = ImeAction.Next
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                isError = loginError != null && email.isBlank() // Basic error state, customize as needed
+                isError = uiState.loginError != null
             )
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                    loginError = null // Clear error when user types
-                },
+                value = uiState.password,
+                onValueChange = viewModel::onPasswordChange,
                 label = { Text("Password") },
                 singleLine = true,
-                visualTransformation = PasswordVisualTransformation(), // Hides password characters
+                visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done // Typically submits the form or closes keyboard
+                    imeAction = ImeAction.Done
                 ),
                 modifier = Modifier.fillMaxWidth(),
-                isError = loginError != null && password.isBlank() // Basic error state
+                isError = uiState.loginError != null
             )
 
-            // Display login error message if it exists
-            loginError?.let {
+            uiState.loginError?.let {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = it,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.fillMaxWidth() // Allow error text to wrap
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp)) // Space before login button
+            Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {
-                    if (email.isNotBlank() && password.isNotBlank()) {
-                        // Launch the suspend function in the Composable's scope
-                        scope.launch {
-                            if (performLogin(email, password)) {
-                                onLoginSuccess() // Call the callback on successful login
-                            }
-                        }
-                    } else {
-                        loginError = "Email and password cannot be empty."
-                        // Optionally show a toast for immediate feedback if fields are empty
-                        // Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
-                    }
-                },
+                onClick = viewModel::onLoginClick,
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !isLoading // Disable button while loading
+                enabled = !uiState.isLoading
             ) {
-                if (isLoading) {
+                if (uiState.isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp), // Make progress indicator same height as text
-                        color = MaterialTheme.colorScheme.onPrimary // Color for progress indicator on button
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
                     Text("Login")
@@ -151,23 +124,17 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                 Text("Forgot Password?")
             }
 
-            TextButton(onClick = { /* TODO: Implement Navigate to Sign Up screen */ }) {
+            TextButton(onClick = onSignupClicked) {
                 Text("Don't have an account? Sign Up")
             }
         }
     }
 }
 
-// Minimal Preview for the LoginScreen composable itself
-@Preview(showBackground = true, name = "Login Screen Preview")
+@Preview(showBackground = true)
 @Composable
-fun LoginScreenStandalonePreview() {
-    // It's good practice for previews to also be wrapped in your app's theme
-    // if they rely on MaterialTheme attributes.
-    AIDMTheme { // Replace with your actual theme if different
-        LoginScreen(onLoginSuccess = {
-            // This lambda does nothing in the preview
-            println("Preview: Login Success triggered")
-        })
+fun LoginScreenPreview() {
+    AIDMTheme {
+        LoginScreen(onLoginSuccess = {}, onSignupClicked = {})
     }
 }

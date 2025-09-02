@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.aidm">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -24,18 +23,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIDM">
         <activity
-            android:name=".MapScreens"
-            android:exported="false" />
-        <activity
-            android:name=".SharedIncidentViewModel"
-            android:exported="false" />
-        <activity
-            android:name=".Typography"
-            android:exported="false" />
-        <activity
-            android:name=".Color"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
@@ -46,53 +33,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ReportIncidentActivity"
-            android:exported="false"
-            android:label="@string/title_activity_report_incident"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="false"
-            android:label="@string/title_activity_profile" />
-        <activity
-            android:name=".MapActivity"
-            android:exported="false"
-            android:label="@string/title_activity_map" />
-        <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RouteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SplashActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ShelterListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ShelterDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".FirstAidActivity"
-            android:exported="false"
-            tools:ignore="DuplicateActivity" />
-        <activity
-            android:name=".Loading"
-            android:exported="false" />
-        <activity
-            android:name=".AnnouncementsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TopBarDemoActivity"
-            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

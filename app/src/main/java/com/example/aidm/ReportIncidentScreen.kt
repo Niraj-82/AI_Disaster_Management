@@ -162,9 +162,3 @@ fun ReportIncidentScreen(
         }
     }
 }
-
-// In a real app, this ViewModel would be more complex.
-// For now, it just holds a reference to the repository.
-class SharedIncidentViewModel(private val repo: FakeRepo = FakeRepo()) : ViewModel() {
-    fun getRepository(): FakeRepo = repo
-}

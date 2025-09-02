@@ -1,5 +1,6 @@
 package com.example.aidm
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,7 +11,13 @@ class ShelterListActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AIDMTheme { // Replace AIDMTheme with your actual theme if different
-                ShelterListScreen()
+                ShelterListScreen(onOpenShelter = { shelterId ->
+                    // Navigate to ShelterDetailActivity, passing the ID
+                    val intent = Intent(this, ShelterDetailActivity::class.java).apply {
+                        putExtra("SHELTER_ID", shelterId)
+                    }
+                    startActivity(intent)
+                })
             }
         }
     }

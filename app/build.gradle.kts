@@ -1,9 +1,8 @@
 plugins {
-        id("com.android.application")
-        id("org.jetbrains.kotlin.android")
-        id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
-
-
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.compose.compiler)
 }
 
 android {
@@ -44,9 +43,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1" // match your Kotlin version
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -59,80 +55,49 @@ android {
 }
 
 dependencies {
-    // Core
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.5")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation(libs.androidx.compose.material3) // You likely have this
-    implementation(libs.androidx.compose.material.icons.core) // Should be transitive, but good to be explicit if issues persist
-    implementation(libs.androidx.compose.material.icons.extended) // CRUCIAL for many icons
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3") // Check for the latest version
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.androidx.navigation.compose) // Or the direct string
+    implementation(libs.androidx.navigation.compose)
 
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0") // Check for the latest compatible version
+    implementation(libs.accompanist.permissions)
 
-    // Activity & Compose
-    implementation("androidx.activity:activity-compose:1.9.2")
-    implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.compose)
 
-    implementation("com.google.android.gms:play-services-location:21.3.0") // Check for the latest version
+    implementation(libs.google.play.services.location)
 
-    // ... other dependencies like Maps Compose
-    implementation("com.google.maps.android:maps-compose:4.4.1") // You already have this
-    implementation("com.google.android.gms:play-services-maps:19.0.0") // You already have this
+    implementation(libs.google.maps.compose)
+    implementation(libs.google.play.services.maps)
 
-    // Compose BOM
-    val composeBom = platform("androidx.compose:compose-bom:2024.09.02")
+    val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
-    // Compose Libraries
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
 
-    // Lifecycle Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // Google Maps
-    implementation("com.google.maps.android:maps-compose:4.4.1")
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.material3)
 
-    // Glance (for widgets)
-    implementation("androidx.glance:glance-appwidget:1.1.1")
-    implementation("androidx.glance:glance-material3:1.1.1")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 
-    // Testing
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(libs.coil.compose)
 
-    implementation(platform("androidx.compose:compose-bom:2024.09.02")) // You already have this
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.09.02")) // You already have this
-
-    // Add this for Wear OS Compose Material
-    implementation("androidx.wear.compose:wear-compose-material")
-
-    // You might also need these explicitly or they might come transitively:
-    // implementation("androidx.wear.compose:wear-compose-foundation")
-    // implementation("androidx.wear.compose:wear-compose-navigation")
-    // ... other dependencies like ...
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.5")
-    implementation("androidx.activity:activity-compose:1.9.2")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    // ...
-    implementation("io.coil-kt:coil-compose:2.6.0")
 
 }
