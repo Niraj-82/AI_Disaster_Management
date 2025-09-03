@@ -1,24 +1,16 @@
 package com.example.aidm
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import com.example.aidm.AIDMTheme // Assuming your theme is here
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 
-class ShelterListActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            AIDMTheme { // Replace AIDMTheme with your actual theme if different
-                ShelterListScreen(onOpenShelter = { shelterId ->
-                    // Navigate to ShelterDetailActivity, passing the ID
-                    val intent = Intent(this, ShelterDetailActivity::class.java).apply {
-                        putExtra("SHELTER_ID", shelterId)
-                    }
-                    startActivity(intent)
-                })
-            }
-        }
+class ShelterListFragment : Fragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_shelter_list, container, false)
     }
 }

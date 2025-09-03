@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_report_incident"
+        android:icon="@android:drawable/ic_menu_report_image" <!-- Placeholder icon -->
+    android:title="Report" />
+    <item
+        android:id="@+id/nav_first_aid"
+        android:icon="@android:drawable/ic_menu_help" <!-- Placeholder icon -->
+    android:title="First Aid" />
+    <item
+        android:id="@+id/nav_shelters"
+        android:icon="@android:drawable/ic_menu_search" <!-- Placeholder icon -->
+    android:title="Shelters" />
+    <item
+        android:id="@+id/nav_announcements"
+        android:icon="@android:drawable/ic_menu_info_details" <!-- Placeholder icon -->
+    android:title="Alerts" />
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@android:drawable/ic_menu_myplaces" <!-- Placeholder icon -->
+    android:title="Profile" />
+</menu>
