@@ -4,20 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShelterListActivity"> <!-- Assuming a ShelterListActivity -->
+    tools:context=".RouteMapActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout_shelter_list"
+        android:id="@+id/app_bar_layout_route_map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_shelter_list"
+            android:id="@+id/toolbar_route_map"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:title="Available Shelters"
-            app:titleTextColor="?attr/colorOnPrimary" />
+            app:title="Route to Shelter"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:navigationIcon="@drawable/ic_arrow_back_default" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -26,43 +27,40 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewShelters"
+        <!-- Using FragmentContainerView for SupportMapFragment is recommended -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map_fragment_container"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:padding="8dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_shelter" /> <!-- Create item_shelter.xml for list items -->
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ProgressBar
-            android:id="@+id/progressBarShelters"
-            style="?android:attr/progressBarStyle"
+            android:id="@+id/progressBarRouteLoading"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible"
             app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/textViewNoShelters"
+        <!-- You can add floating action buttons or other UI elements over the map here -->
+        <!-- Example:
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_recenter_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_shelters_message"
-            android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:visibility="gone"
+            android:layout_margin="16dp"
+            app:srcCompat="@android:drawable/ic_menu_mylocation"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone"/>
+            app:layout_constraintEnd_toEndOf="parent" />
+        -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

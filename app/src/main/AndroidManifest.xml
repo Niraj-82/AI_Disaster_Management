@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,11 +20,16 @@
         android:theme="@style/Theme.AIDM"
         tools:targetApi="31">
 
-        <!-- MainActivity is the entry point, immediately launching SplashActivity -->
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_API_KEY_HERE" />
+        <!-- IMPORTANT: Replace YOUR_API_KEY_HERE with your actual Google Maps API key -->
+
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.AIDM">
+            android:theme="@style/Theme.AIDM.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,27 +37,79 @@
         </activity>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.AIDM.NoActionBar" />
+            android:theme="@style/Theme.AIDM" />
+        <!--
+            Adjust MainActivity's exported and intent-filter if it's supposed to be a launcher
+            after Splash. Original had it as LAUNCHER. Assuming Splash is the true entry.
+        -->
 
         <activity
             android:name=".LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.AIDM.NoActionBar" />
-
         <activity
             android:name=".SignupActivity"
             android:exported="false"
             android:theme="@style/Theme.AIDM.NoActionBar" />
-
         <activity
             android:name=".HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.AIDM" />
 
-        <!-- Remove any other old activity declarations that are no longer needed -->
-        <!-- e.g., if there were specific activities for Compose screens -->
+        <activity
+            android:name=".HostActivityWithTopBar"
+            android:exported="false"
+            android:theme="@style/Theme.AIDM"/> <!-- Or specific theme if needed -->
+        <!-- android:label can be set here if you want a specific title for this activity in system UI -->
+
+        <activity
+            android:name=".SharedIncidentActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AIDM"/>
+
+        <activity
+            android:name=".ShelterListActivity"
+            android:exported="false"
+            android:label="Shelters"
+            android:theme="@style/Theme.AIDM"/>
+
+        <activity
+            android:name=".ShelterDetailActivity"
+            android:exported="false"
+            android:label="Shelter Details"
+            android:parentActivityName=".ShelterListActivity"
+            android:theme="@style/Theme.AIDM">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ShelterListActivity" />
+        </activity>
+
+        <activity
+            android:name=".RouteMapActivity"
+            android:exported="false"
+            android:label="Route to Shelter"
+            android:parentActivityName=".ShelterDetailActivity"
+            android:theme="@style/Theme.AIDM">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ShelterDetailActivity" />
+        </activity>
+
+        <!--
+            The following activities from your original manifest seem to be based on Kotlin file names
+            that are not actual Activities (e.g., data classes, adapters, or a misnamed Theme activity).
+            They should typically not be declared as <activity> elements unless they are indeed screens.
+            Removing them:
+            <activity android:name=".HazardData" android:exported="false" />
+            <activity android:name=".Theme" android:exported="false" /> // This was an Activity class, if it's a screen keep it, otherwise remove. Assuming it's not a UI screen based on name.
+            <activity android:name=".ShelterData" android:exported="false" />
+            <activity android:name=".ShelterAdapter" android:exported="false" />
+            <activity android:name=".Shelter" android:exported="false" /> // Assuming ShelterListActivity or ShelterDetailActivity replaced its purpose. If it's a distinct screen, re-add.
+            <activity android:name=".MainActivity2" android:exported="false" /> // If this is a valid activity, re-add.
+        -->
+        <!-- If MainActivity2, Theme (Activity), or Shelter (Activity) are actual screens, re-add their declarations -->
 
     </application>
 

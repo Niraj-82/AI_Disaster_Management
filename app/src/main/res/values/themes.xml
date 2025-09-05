@@ -13,4 +13,21 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
-</resources>
+
+    <!-- NoActionBar theme variant for activities like Splash, Login -->
+    <style name="Theme.AIDM.NoActionBar" parent="Theme.AIDM">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- If Theme.AIDM is already NoActionBar, you might not even need this,
+             or it could inherit directly from a Material NoActionBar theme:
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item> -->
+    </style>
+
+    <!-- Example for a splash screen theme that might also hide status bar -->
+    <style name="Theme.AIDM.FullScreen.NoActionBar" parent="Theme.AIDM.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <!-- For newer APIs, you might control this with WindowInsetsController -->
+    </style>
+
+
+        </resources>

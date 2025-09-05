@@ -76,20 +76,23 @@ dependencies {
 
     implementation(libs.google.maps.compose)
     implementation(libs.google.play.services.maps)
+    implementation(libs.androidx.activity)
 
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
-
+    implementation("com.google.android.gms:play-services-maps:18.2.0") // Check for latest version
+    implementation("com.google.android.gms:play-services-location:21.2.0") // Check for latest version
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-
+    implementation("com.google.android.gms:play-services-auth:21.0.0") // Or the latest version
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3") // Or latest
+    implementation("androidx.activity:activity-ktx:1.9.0")          // Or latest (for by viewModels)
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
-
+    implementation("com.google.android.gms:play-services-auth:21.0.0") // Check for the latest version
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

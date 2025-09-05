@@ -1,9 +1,20 @@
 <resources>
-    <string name="app_name">AIDM</string> <!-- Or your actual app name -->
+    <string name="app_name">AIDM</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_shelter">Shelter</string>
+    <string name="title_activity_shelter_adapter">ShelterAdapter</string>
+    <string name="title_activity_shelter_data">ShelterData</string>
+    <string name="title_activity_hazard_data">HazardData</string>
+    <string name="title_activity_theme">Theme</string>
+    <string name="title_activity_top_bar">TopBar</string>
 
-    <!-- Add these if they are missing -->
-    <string name="title_activity_report_incident">Report Incident</string>
-    <string name="title_activity_profile">Profile</string>
-    <string name="title_activity_map">Map</string>
-
+    <string name="title_activity_host_with_top_bar">HostActivityWithTopBar</string>
+    <string name="title_activity_shared_incident">SharedIncidentActivity</string>
+    <string name="title_activity_shelter_list">ShelterListActivity</string>
+    <string name="no_shelters_message">No shelters available at this time.</string>
+    <string name="title_activity_shelter_detail">ShelterDetailActivity</string>
+    <string name="title_activity_route_map">RouteMapActivity</string>
+    <!-- IMPORTANT: Replace with your actual Google Maps API key -->
+    <string name="google_maps_key">YOUR_API_KEY_HERE</string>
 </resources>
