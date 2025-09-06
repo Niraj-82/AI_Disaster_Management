@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.aidm.HomeFragment" <!-- Replace with your actual HomeFragment class -->
+        android:name="com.example.aidm.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" /> <!-- Replace with your actual HomeFragment layout -->
+        tools:layout="@layout/fragment_home" /> <!-- Replace with your actual HomeFragment class & layout -->
 
     <!-- You can add other fragments here later, for example:
     <fragment

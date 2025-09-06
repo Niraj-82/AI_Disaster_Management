@@ -6,19 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-
-// --- Data Classes ---
-// It's good practice to define all related data models together.
-
-data class IncidentData(
-    val type: String,
-    val description: String,
-    val latitude: Double,
-    val longitude: Double,
-    val timestamp: Long = System.currentTimeMillis()
-)
-
-
+import java.util.UUID
 // --- Single, Unified FakeRepo Class ---
 
 class FakeRepo {
@@ -65,10 +53,16 @@ class FakeRepo {
     suspend fun submitIncident(type: String, description: String, lat: Double, lng: Double): Boolean {
         delay(500) // Simulate network delay
         val newIncident = IncidentData(
+            id = java.util.UUID.randomUUID().toString(), // Generate a unique ID
             type = type,
             description = description,
+            location = "Unknown Location", // Placeholder
             latitude = lat,
-            longitude = lng
+            longitude = lng,
+            timestamp = System.currentTimeMillis(), // Current time
+            status = "Reported", // Default status
+            reportedBy = "FakeRepoUser", // Placeholder or null if appropriate
+            imageUrl = null // Default to no image
         )
         mutex.withLock {
             _incidents.value = _incidents.value + newIncident
@@ -143,4 +137,10 @@ class FakeRepo {
             )
         )
     }
+}
+
+private val appRepository = FakeRepo()
+
+fun getRepository(): FakeRepo {
+    return appRepository
 }

@@ -24,6 +24,13 @@ class SharedIncidentViewModel : ViewModel() {
     private val _incidentDetails = MutableLiveData<IncidentData?>()
     val incidentDetails: LiveData<IncidentData?> = _incidentDetails
 
+    // Instance of the repository
+    private val repository = FakeRepo() // Or initialize from a constructor if using DI
+
+    fun getRepository(): FakeRepo {
+        return repository
+    }
+
     // Function to load incident details.
     // In a real app, this might fetch data from a repository (network/database)
     // based on an incidentId.

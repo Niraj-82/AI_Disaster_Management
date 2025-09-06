@@ -3,7 +3,7 @@ package com.example.aidm
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.aidm.AIDMTheme // Make sure this import is correct
+import com.example.aidm.ui.theme.AIDMTheme // Corrected import
 
 class RouteActivity : ComponentActivity() {
     companion object {

@@ -1,18 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android) // This should provide parcelize
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose.compiler)
+    id("org.jetbrains.kotlin.plugin.parcelize") // Add this line
 }
-
 android {
     namespace = "com.example.aidm"
-    compileSdk = 34
+    compileSdk = 35 // Updated from 34
 
     defaultConfig {
         applicationId = "com.example.aidm"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35 // Updated from 34
         versionCode = 1
         versionName = "1.0"
 
@@ -43,6 +43,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -67,16 +70,22 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.kotlinx.serialization.json)
 
+    // Retrofit dependencies
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.kotlinx.serialization.converter)
 
     implementation(libs.accompanist.permissions)
 
-    implementation(libs.androidx.activity.compose)
+    // Ensuring specific versions for activity libraries if issues persist
+    implementation("androidx.activity:activity:1.9.0") 
+    implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.activity:activity-compose:1.9.0")
 
     implementation(libs.google.play.services.location)
 
     implementation(libs.google.maps.compose)
     implementation(libs.google.play.services.maps)
-    implementation(libs.androidx.activity)
+    // implementation(libs.androidx.activity) // Replaced by specific version above
 
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
@@ -89,7 +98,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.0.0") // Or the latest version
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.3") // Or latest
-    implementation("androidx.activity:activity-ktx:1.9.0")          // Or latest (for by viewModels)
+    // implementation("androidx.activity:activity-ktx:1.9.0") // Already specified above
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
     implementation("com.google.android.gms:play-services-auth:21.0.0") // Check for the latest version

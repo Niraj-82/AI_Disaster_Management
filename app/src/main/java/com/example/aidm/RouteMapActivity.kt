@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.privacysandbox.tools.core.generator.build
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -48,7 +47,7 @@ import kotlin.math.sqrt // Added for math functions
 import kotlin.math.max  // Added for math functions
 import kotlin.math.min  // Added for math functions
 
-// --- Data classes for Directions API Response (Simplified - already defined) ---
+
 @Serializable
 data class DirectionsResponse(
     val routes: List<Route>?,

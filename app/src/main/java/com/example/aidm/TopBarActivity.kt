@@ -23,6 +23,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.aidm.ui.theme.AIDMTheme;
 
 class TopBarDemoActivity : ComponentActivity() { // Renamed for clarity
     override fun onCreate(savedInstanceState: Bundle?) {

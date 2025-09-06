@@ -17,4 +17,7 @@
     <string name="title_activity_route_map">RouteMapActivity</string>
     <!-- IMPORTANT: Replace with your actual Google Maps API key -->
     <string name="google_maps_key">YOUR_API_KEY_HERE</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string><!-- Added for Google Sign-In -->
 </resources>
