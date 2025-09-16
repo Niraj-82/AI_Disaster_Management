@@ -31,7 +31,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="AIzaSyBIOvXDBlppOf8AC0VPKTXTJPiVTAwiX5c" />
 
         <activity
             android:name=".MainActivity"
@@ -42,8 +42,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SafeRoutingActivity" /> <!-- This was already present -->
-        <activity android:name=".SafePathActivity" android:exported="false" /> <!-- Added New Activity -->
+        <activity android:name=".SafeRoutingActivity" />
+        <activity android:name=".SafePathActivity" android:exported="false" />
         <activity android:name=".SOSActivity" />
         <activity android:name=".IncidentReportActivity" />
         <activity android:name=".ResourceTrackerActivity" />
