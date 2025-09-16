@@ -58,4 +58,5 @@
     <string name="incident_type_format">Incident Type: %1$s</string>
     <string name="incident_description_format">Description: %1$s</string>
     <string name="incident_reported_format">Reported: %1$s</string>
+    <string name="button_disaster_prep">Disaster Prep</string>
 </resources>

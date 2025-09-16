@@ -14,6 +14,12 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        val disasterPrepButton: Button = findViewById(R.id.btn_disaster_prep)
+        disasterPrepButton.setOnClickListener {
+            val intent = Intent(this, DisasterPrepActivity::class.java)
+            startActivity(intent)
+        }
+
         val medicalInfoButton: Button = findViewById(R.id.btn_medical_info)
         medicalInfoButton.setOnClickListener {
             val intent = Intent(this, MedicalInfoActivity::class.java)

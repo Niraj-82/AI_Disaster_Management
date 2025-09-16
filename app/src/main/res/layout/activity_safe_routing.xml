@@ -5,6 +5,7 @@
     android:id="@+id/safe_routing_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background_light"
     tools:context=".SafeRoutingActivity">
 
     <com.google.android.gms.maps.MapView
