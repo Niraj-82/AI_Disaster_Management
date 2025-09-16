@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_shelter_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text="Shelter Name" />
+
+    <TextView
+        android:id="@+id/tv_shelter_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Address" />
+
+    <TextView
+        android:id="@+id/tv_shelter_capacity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Capacity: 0/100" />
+
+    <TextView
+        android:id="@+id/tv_shelter_supplies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Supplies: Food, Water" />
+
+</LinearLayout>
