@@ -42,7 +42,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SafeRoutingActivity" />
+        <activity android:name=".SafeRoutingActivity" /> <!-- This was already present -->
+        <activity android:name=".SafePathActivity" android:exported="false" /> <!-- Added New Activity -->
         <activity android:name=".SOSActivity" />
         <activity android:name=".IncidentReportActivity" />
         <activity android:name=".ResourceTrackerActivity" />
