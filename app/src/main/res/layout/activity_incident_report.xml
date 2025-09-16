@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/incident_report_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background_light"
     tools:context=".IncidentReportActivity">
 
     <ScrollView
@@ -26,12 +28,14 @@
                 android:text="@string/report_an_incident_title"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:textColor="@android:color/black"
                 android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/incident_type"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"/>
 
             <Spinner
@@ -45,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"/>
 
             <EditText
@@ -52,6 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/describe_incident_hint"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="@android:color/black"
                 android:minLines="3"
                 android:gravity="top"
                 android:layout_marginBottom="16dp"/>
@@ -60,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_photo_optional"
+                android:textColor="@android:color/black"
                 android:textSize="18sp"/>
 
             <Button
