@@ -23,6 +23,18 @@
         android:theme="@style/Theme.ResQAI"
         tools:targetApi="31">
         <activity
+            android:name=".ReportIncidentActivity"
+            android:exported="false"
+            android:label="Report New Incident"
+            android:parentActivityName=".HomeActivity"> <!-- Assuming HomeActivity is the parent -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
+        <activity
+            android:name=".model.IncidentReport"
+            android:exported="false" />
+        <activity
             android:name=".PrepTipsActivity"
             android:exported="false" />
         <activity
@@ -43,9 +55,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".SafeRoutingActivity" />
-        <activity android:name=".SafePathActivity" android:exported="false" />
+        <activity
+            android:name=".SafePathActivity"
+            android:exported="false" />
         <activity android:name=".SOSActivity" />
-        <activity android:name=".IncidentReportActivity" />
+        <activity android:name=".IncidentReportActivity" /> <!-- Existing entry -->
         <activity android:name=".ResourceTrackerActivity" />
         <activity android:name=".MedicalInfoActivity" />
         <activity android:name=".FirstAidGuideActivity" />

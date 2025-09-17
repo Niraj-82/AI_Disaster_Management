@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182747489967",
+    "project_id": "ai-disaster-management-b03d9",
+    "storage_bucket": "ai-disaster-management-b03d9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182747489967:android:84ec708d1da5ceec31565a",
+        "android_client_info": {
+          "package_name": "com.example.resqai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA6sSSscWdcK5Qbkpwk5Dt-YV5MbZ2wF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
