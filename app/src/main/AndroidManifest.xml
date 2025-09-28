@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" /> <!-- Remove WRITE_EXTERNAL_STORAGE if targeting API 29+ and using scoped storage properly -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/> -->
     <uses-feature
         android:name="android.hardware.camera"
@@ -73,7 +74,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="com.example.resqai.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

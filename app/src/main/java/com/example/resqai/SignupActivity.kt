@@ -13,9 +13,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-
-// TODO: Create SignupViewModel
-// import com.example.resqai.viewmodel.SignupViewModel
+import com.example.resqai.viewmodel.SignupViewModel
 
 class SignupActivity : AppCompatActivity() {
 
@@ -33,8 +31,7 @@ class SignupActivity : AppCompatActivity() {
     private lateinit var textViewGoToLogin: TextView
     private lateinit var progressBar: ProgressBar
 
-    // TODO: Initialize SignupViewModel
-    // private val signupViewModel: SignupViewModel by viewModels()
+    private val signupViewModel: SignupViewModel by viewModels()
     private val ADMIN_SIGNUP_CODE = "12345"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,13 +65,35 @@ class SignupActivity : AppCompatActivity() {
         }
 
         textViewGoToLogin.setOnClickListener {
-            // TODO: Navigate to LoginActivity
-            // startActivity(Intent(this, LoginActivity::class.java))
-            // finish()
-            Toast.makeText(this, "Navigate to Login Screen", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
 
-        // TODO: Observe ViewModel LiveData for signup status, errors, loading
+        signupViewModel.signupStatus.observe(this) {
+            state ->
+            when (state) {
+                is SignupViewModel.SignupState.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                    buttonSignup.isEnabled = false
+                }
+                is SignupViewModel.SignupState.Success -> {
+                    progressBar.visibility = View.GONE
+                    buttonSignup.isEnabled = true
+                    Toast.makeText(this, "Signup successful!", Toast.LENGTH_SHORT).show()
+                    // TODO: Navigate to the appropriate activity based on role
+                    finish()
+                }
+                is SignupViewModel.SignupState.Error -> {
+                    progressBar.visibility = View.GONE
+                    buttonSignup.isEnabled = true
+                    Toast.makeText(this, "Signup failed: ${state.message}", Toast.LENGTH_LONG).show()
+                }
+                else -> {
+                    progressBar.visibility = View.GONE
+                    buttonSignup.isEnabled = true
+                }
+            }
+        }
     }
 
     private fun handleSignup() {
@@ -131,17 +150,9 @@ class SignupActivity : AppCompatActivity() {
         if (!isValid) {
             return
         }
-        
-        progressBar.visibility = View.VISIBLE
-        buttonSignup.isEnabled = false
-        // TODO: Call ViewModel to perform signup
-        // val role = if (isAdmin) "admin" else "normal"
-        // signupViewModel.signupUser(email, password, role)
-        Toast.makeText(this, "Signup attempt: Email: $email, Admin: $isAdmin", Toast.LENGTH_LONG).show()
-        // Simulate network call
-        // progressBar.visibility = View.GONE
-        // buttonSignup.isEnabled = true
 
+        val role = if (isAdmin) "admin" else "normal"
+        signupViewModel.signupUser(email, password, role)
     }
 
     override fun onSupportNavigateUp(): Boolean {

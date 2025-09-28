@@ -12,10 +12,13 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.example.resqai.model.Incident
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import java.io.File
 import java.util.Date
 import java.util.UUID
 
@@ -43,6 +46,14 @@ class ReportIncidentActivity : AppCompatActivity() {
         }
     }
 
+    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) {
+        success ->
+        if (success) {
+            imageViewIncidentPreview.setImageURI(imageUri)
+            imageViewIncidentPreview.visibility = View.VISIBLE
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_report_incident)
@@ -63,12 +74,29 @@ class ReportIncidentActivity : AppCompatActivity() {
         editTextIncidentType.setAdapter(adapter)
 
 
-        buttonAddPhoto.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            pickImageLauncher.launch(intent)
-        }
+        buttonAddPhoto.setOnClickListener { showPhotoOptions() }
 
         buttonSubmitIncident.setOnClickListener { submitReport() }
+    }
+
+    private fun showPhotoOptions() {
+        val options = arrayOf("Take Photo", "Choose from Gallery")
+        AlertDialog.Builder(this)
+            .setTitle("Add Photo")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> {
+                        val file = File(filesDir, "pic.jpg")
+                        imageUri = FileProvider.getUriForFile(this, "com.example.resqai.fileprovider", file)
+                        takePictureLauncher.launch(imageUri)
+                    }
+                    1 -> {
+                        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        pickImageLauncher.launch(intent)
+                    }
+                }
+            }
+            .show()
     }
 
     private fun submitReport() {
