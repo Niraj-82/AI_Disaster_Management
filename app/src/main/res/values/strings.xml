@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="disaster_prep_title">Disaster Preparedness</string>
     <string name="prep_tips_title_format">%s Tips</string>
     <string name="no_tips_available">No tips available for this disaster type.</string>
@@ -12,15 +12,16 @@
     <string name="shelter_capacity_format">Capacity: %d</string>
     <string name="shelter_supplies_format">Supplies: %s</string>
     <string name="location_lat_lon_format">Lat: %1$.4f, Lon: %2$.4f</string>
-    <string name="button_incident_report">Incident Report</string>
+    <string name="button_incident_report">Incident Report</string>aina
     <string name="button_silent_sos">Silent SOS</string>
     <string name="location_not_available">Location: Not available</string>
     <string name="location_permission_denied">Location: Permission denied</string>
-    <string name="location_permission_denied_toast">Location permission denied.</string>
+    <string name="location_permission_denied_toast">Location permission denied.</string>aina
     <string name="location_needed_for_sos">Location is needed for SOS functionality.</string>
     <string name="offline_mode_limited_functionality">Offline mode: Limited map functionality. Some features may not be available.</string>
     <string name="error_opening_camera">Error opening camera: %1$s</string>
-    <string name="report_submitted">Report Submitted!\n%1$s</string>
+    <string name="report_submitted">Report Submitted!
+%1$s</string>
     <string name="incident_type">Incident Type:</string>
     <string name="description">Description:</string>
     <string name="describe_incident_hint">Describe the incident...</string>
@@ -46,17 +47,21 @@
     <string name="hint_emergency_contact_phone">Emergency Contact Phone</string>
     <string name="button_save_medical_info">Save Medical Info</string>
     <string name="medical_info_saved_toast">Medical information saved.</string>
-
     <string name="first_aid_guide_title">First Aid Guide</string>
-    <string name="first_aid_guide_title_activity">First Aid Guide</string>
+    <string name="first_aid_guide_title_activity">First Aid Guide</string>aina
     <string name="first_aid_detail_title_default">First Aid Detail</string>
     <string name="first_aid_detail_content_unavailable">Details not available for this topic.</string>
     <string name="button_first_aid_guide">First Aid Guide</string>
-
-    <string name="shared_incidents_title">Reported Incidents</string>
     <string name="button_view_incidents">View Reported Incidents</string>
     <string name="incident_type_format">Incident Type: %1$s</string>
     <string name="incident_description_format">Description: %1$s</string>
     <string name="incident_reported_format">Reported: %1$s</string>
     <string name="button_disaster_prep">Disaster Prep</string>
+    <string-array name="operational_status_array">
+        <item>Operational</item>
+        <item>Full</item>
+        <item>Temporarily Closed</item>
+        <item>Permanently Closed</item>
+    </string-array>
+    <string name="shared_incidents_title">Shared Incidents</string>
 </resources>

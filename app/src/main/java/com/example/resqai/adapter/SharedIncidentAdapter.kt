@@ -1,12 +1,12 @@
 package com.example.resqai.adapter
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.resqai.R
 import com.example.resqai.model.Incident
 import java.text.SimpleDateFormat
@@ -47,15 +47,15 @@ class SharedIncidentAdapter(private var incidents: List<Incident>) :
             val sdf = SimpleDateFormat("hh:mm a, MMM dd", Locale.getDefault())
             incidentTimeTextView.text = sdf.format(Date(incident.timestamp))
 
-            if (incident.photoUri != null) {
-                try {
-                    val photoUri = Uri.parse(incident.photoUri)
-                    incidentPhotoImageView.setImageURI(photoUri)
-                    incidentPhotoImageView.visibility = View.VISIBLE
-                } catch (e: Exception) {
-                    incidentPhotoImageView.visibility = View.GONE
-                    // Log error or set a placeholder for broken image
-                }
+            // Use Glide to load the image from the URL
+            if (incident.imageUrl != null) {
+                incidentPhotoImageView.visibility = View.VISIBLE
+                Glide.with(itemView.context)
+                    .load(incident.imageUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.back) // Optional: a placeholder image
+                    .error(R.drawable.back) // Optional: an error image
+                    .into(incidentPhotoImageView)
             } else {
                 incidentPhotoImageView.visibility = View.GONE
             }

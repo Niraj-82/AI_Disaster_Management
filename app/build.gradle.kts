@@ -34,18 +34,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    // If you have buildFeatures like viewBinding, it would go here
-    // buildFeatures {
-    //     viewBinding = true
-    // }
 }
 
 dependencies {
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0")) // Added: Firebase BOM (adjust version as needed)
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-auth-ktx")         // Added: Firebase Authentication
-    implementation("com.google.firebase:firebase-analytics-ktx")     // Added: Firebase Analytics (use -ktx version)
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx") // For photo uploads
+
+    // Image Loading
+    implementation("com.github.bumptech.glide:glide:4.16.0") // For displaying images
 
     // AndroidX & Material
     implementation(libs.androidx.core.ktx)
@@ -56,7 +56,7 @@ dependencies {
 
     // Google Play Services
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    implementation("com.google.android.gms:play-services-location:21.0.1") // Note: Consider updating to a newer version if available
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     // Testing
     testImplementation(libs.junit)

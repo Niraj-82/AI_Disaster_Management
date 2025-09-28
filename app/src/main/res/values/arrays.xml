@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="incident_types">
-        <item>Flood</item>
         <item>Fire</item>
-        <item>Blocked Road</item>
-        <item>Injured Person</item>
+        <item>Flood</item>
+        <item>Earthquake</item>
+        <item>Medical Emergency</item>
+        <item>Road Accident</item>
+        <item>Structural Collapse</item>
+        <item>Hazardous Material Spill</item>
         <item>Other</item>
     </string-array>
 </resources>

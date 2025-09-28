@@ -1,13 +1,13 @@
 package com.example.resqai.model
 
-import android.net.Uri
+// No longer need android.net.Uri import for this data class
 
 data class Incident(
     val id: String = System.currentTimeMillis().toString(), // Simple unique ID
     val type: String,
     val description: String,
     val timestamp: Long = System.currentTimeMillis(),
-    val photoUri: String?, // Store URI as String
+    var imageUrl: String? = null, // Will store the remote URL from Firebase Storage
     val latitude: Double?,
     val longitude: Double?
 )
