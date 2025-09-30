@@ -3,12 +3,14 @@ package com.example.resqai
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.resqai.adapter.SharedIncidentAdapter
 import com.example.resqai.data.IncidentRepository
 import com.example.resqai.model.Incident
+import com.example.resqai.utils.NetworkUtils
 
 class SharedIncidentsActivity : AppCompatActivity() {
 
@@ -35,14 +37,22 @@ class SharedIncidentsActivity : AppCompatActivity() {
     }
 
     private fun loadIncidents() {
-        val incidents = IncidentRepository.getAllIncidents()
-        if (incidents.isEmpty()) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection.", Toast.LENGTH_SHORT).show()
             tvNoIncidents.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
-        } else {
-            tvNoIncidents.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-            adapter.updateIncidents(incidents)
+            return
+        }
+
+        IncidentRepository.getAllIncidents(this) { incidents ->
+            if (incidents.isEmpty()) {
+                tvNoIncidents.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            } else {
+                tvNoIncidents.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                adapter.updateIncidents(incidents)
+            }
         }
     }
 }

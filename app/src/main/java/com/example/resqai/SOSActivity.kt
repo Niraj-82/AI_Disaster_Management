@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.resqai.utils.NetworkUtils
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -141,6 +142,11 @@ class SOSActivity : AppCompatActivity() {
     }
 
     private fun sendSos(isSilent: Boolean) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection. SOS cannot be sent.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         currentLocation?.let {
             val messageResId = if (isSilent) R.string.silent_sos_sent_from else R.string.sos_sent_from
             val locationString = getString(R.string.location_format, it.latitude, it.longitude)

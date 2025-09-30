@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReportIncidentActivity"> <!-- Assuming ReportIncidentActivity.kt -->
+    tools:context=".ReportIncidentActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -63,12 +63,42 @@
                     android:gravity="top"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:layout_marginBottom="8dp"/>
+
+            <RadioGroup
+                android:id="@+id/radioGroupLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <RadioButton
+                    android:id="@+id/radioButtonCurrentLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Use Current Location"
+                    android:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/radioButtonManualLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter Manually"/>
+            </RadioGroup>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilLocation"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Location (e.g., Address, Landmark)"
+                android:hint="Location (e.g., Address or Lat, Long)"
+                android:visibility="gone"
+                tools:visibility="visible"
                 android:layout_marginBottom="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -93,21 +123,6 @@
                     android:inputType="textPersonName|textCapWords"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilSeverity"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Severity (e.g., Low, Medium, High)"
-                android:layout_marginBottom="12dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editTextSeverity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapWords"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
             <ImageView
                 android:id="@+id/imageViewIncidentPreview"
                 android:layout_width="120dp"
@@ -126,7 +141,7 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add or Change Photo"
+                android:text="Add Photo (Optional)"
                 android:layout_marginBottom="24dp"/>
 
             <com.google.android.material.button.MaterialButton

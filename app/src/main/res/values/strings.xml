@@ -57,6 +57,7 @@
     <string name="incident_description_format">Description: %1$s</string>
     <string name="incident_reported_format">Reported: %1$s</string>
     <string name="button_disaster_prep">Disaster Prep</string>
+    <string name="button_announcements">Announcements</string>
     <string-array name="operational_status_array">
         <item>Operational</item>
         <item>Full</item>
@@ -64,4 +65,7 @@
         <item>Permanently Closed</item>
     </string-array>
     <string name="shared_incidents_title">Shared Incidents</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="button_logout">Logout</string>
 </resources>
