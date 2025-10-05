@@ -6,9 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- Remove WRITE_EXTERNAL_STORAGE if targeting API 29+ and using scoped storage properly -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/> -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -36,13 +35,16 @@
             android:name=".SignupActivity"
             android:exported="false" />
         <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".AdminShelterEditActivity"
             android:exported="false" />
         <activity
-            android:name=".ReportIncidentActivity"
+            android:name=".IncidentReportActivity"
             android:exported="false"
             android:label="Report New Incident"
-            android:parentActivityName=".HomeActivity"> <!-- Assuming HomeActivity is the parent -->
+            android:parentActivityName=".HomeActivity"> 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
@@ -52,7 +54,7 @@
             android:exported="false" />
         <activity
             android:name=".PrepTipsActivity"
-            android_exported="false" />
+            android:exported="false" />
         <activity
             android:name=".DisasterPrepActivity"
             android:exported="false" />
@@ -65,23 +67,30 @@
             android:name=".MainActivity"
             android:exported="false">
         </activity>
-        <activity android:name=".SafeRoutingActivity" />
+        <activity android:name=".SafeRoutingActivity" android:exported="false"/>
         <activity
             android:name=".SafePathActivity"
             android:exported="false" />
-        <activity android:name=".SOSActivity" />
-        <activity android:name=".IncidentReportActivity" /> <!-- Existing entry -->
-        <activity android:name=".ResourceTrackerActivity" />
-        <activity android:name=".MedicalInfoActivity" />
-        <activity android:name=".FirstAidGuideActivity" />
-        <activity android:name=".FirstAidDetailActivity" />
+        <activity android:name=".SOSActivity" android:exported="false"/>
+        <activity android:name=".ResourceTrackerActivity" android:exported="false"/>
+        <activity android:name=".MedicalInfoActivity" android:exported="false"/>
+        <activity android:name=".FirstAidGuideActivity" android:exported="false"/>
+        <activity android:name=".FirstAidDetailActivity" android:exported="false"/>
+        <activity
+            android:name=".FirstAidActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".SharedIncidentsActivity"
-            android:label="@string/shared_incidents_title" />
+            android:label="@string/shared_incidents_title" 
+            android:exported="false"/>
         <activity
             android:name=".AnnouncementActivity"
             android:label="Announcements"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:exported="false"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
