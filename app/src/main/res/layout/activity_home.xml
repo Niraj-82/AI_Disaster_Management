@@ -1,54 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background_light"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
     tools:context=".HomeActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:text="ResQAI"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="48dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ResQAI Dashboard"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="32dp"/>
+    <Button
+        android:id="@+id/btn_sos"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="SOS"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp"/>
 
-        <Button
-            android:id="@+id/btn_report_incident"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Report an Incident"
-            android:layout_marginBottom="16dp"/>
+    <Button
+        android:id="@+id/btn_medical_info"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="Medical Info"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp"/>
 
-        <Button
-            android:id="@+id/btn_view_map"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View Incidents Map"
-            android:layout_marginBottom="16dp"/>
+    <Button
+        android:id="@+id/btn_announcements"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="Announcements"
+        android:textSize="18sp"/>
 
-        <Button
-            android:id="@+id/btn_first_aid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="First Aid Information"
-            android:layout_marginBottom="16dp"/>
-
-        <Button
-            android:id="@+id/btn_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="My Profile"/>
-
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

@@ -41,17 +41,23 @@
             android:name=".AdminShelterEditActivity"
             android:exported="false" />
         <activity
-            android:name=".IncidentReportActivity"
+            android:name=".ReportIncidentActivity"
             android:exported="false"
             android:label="Report New Incident"
-            android:parentActivityName=".HomeActivity"> 
+            android:parentActivityName=".HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HomeActivity" />
         </activity>
         <activity
-            android:name=".model.IncidentReport"
-            android:exported="false" />
+            android:name=".ViewIncidentsActivity"
+            android:exported="false"
+            android:label="Reported Incidents"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
+        </activity>
         <activity
             android:name=".PrepTipsActivity"
             android:exported="false" />
@@ -65,13 +71,14 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity android:name=".SafeRoutingActivity" android:exported="false"/>
         <activity
             android:name=".SafePathActivity"
             android:exported="false" />
-        <activity android:name=".SOSActivity" android:exported="false"/>
+        <activity android:name=".SosActivity" android:exported="false"/>
         <activity android:name=".ResourceTrackerActivity" android:exported="false"/>
         <activity android:name=".MedicalInfoActivity" android:exported="false"/>
         <activity android:name=".FirstAidGuideActivity" android:exported="false"/>
@@ -84,7 +91,7 @@
             android:exported="false" />
         <activity
             android:name=".SharedIncidentsActivity"
-            android:label="@string/shared_incidents_title" 
+            android:label="@string/shared_incidents_title"
             android:exported="false"/>
         <activity
             android:name=".AnnouncementActivity"

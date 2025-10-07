@@ -5,28 +5,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_disaster_prep"
-            android:title="@string/button_disaster_prep" />
+            android:id="@+id/nav_report_incident"
+            android:icon="@drawable/ic_report"
+            android:title="Report Incident" />
         <item
-            android:id="@+id/nav_resource_tracker"
-            android:title="@string/button_resource_tracker" />
-        <item
-            android:id="@+id/nav_view_incidents"
-            android:title="@string/button_view_incidents" />
-        <item
-            android:id="@+id/nav_incident_report"
-            android:title="@string/button_incident_report" />
-        <item
-            android:id="@+id/nav_safe_routing"
-            android:title="@string/button_safe_routing" />
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_map"
+            android:title="Map" />
     </group>
 
-    <item android:title="Account">
+    <item android:title="">
         <menu>
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_logout"
-                android:title="@string/button_logout" />
+                android:title="Logout" />
         </menu>
     </item>
 

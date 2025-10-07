@@ -1,80 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/medical_info_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/app_background_light"
     tools:context=".MedicalInfoActivity">
 
     <TextView
-        android:id="@+id/tv_medical_info_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/medical_info_title"
+        android:text="Medical Info Activity"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/et_medical_conditions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_medical_conditions"
-        android:textColorHint="@android:color/darker_gray"
-        android:textColor="@android:color/black"
-        android:inputType="textMultiLine"
-        android:minLines="2"
-        android:layout_marginBottom="8dp"/>
-
-    <EditText
-        android:id="@+id/et_allergies"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_allergies"
-        android:textColorHint="@android:color/darker_gray"
-        android:textColor="@android:color/black"
-        android:inputType="textMultiLine"
-        android:minLines="2"
-        android:layout_marginBottom="8dp"/>
-
-    <EditText
-        android:id="@+id/et_emergency_contact_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_emergency_contact_name"
-        android:textColorHint="@android:color/darker_gray"
-        android:textColor="@android:color/black"
-        android:inputType="textPersonName"
-        android:layout_marginBottom="8dp"/>
-
-    <EditText
-        android:id="@+id/et_emergency_contact_phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_emergency_contact_phone"
-        android:textColorHint="@android:color/darker_gray"
-        android:textColor="@android:color/black"
-        android:inputType="phone"
-        android:layout_marginBottom="16dp"/>
-
-    <Button
-        android:id="@+id/btn_save_medical_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_save_medical_info"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/btn_first_aid_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_first_aid_guide"
-        android:layout_gravity="center_horizontal"/>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

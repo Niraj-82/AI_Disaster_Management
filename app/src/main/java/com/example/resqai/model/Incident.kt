@@ -1,13 +1,16 @@
 package com.example.resqai.model
 
-// No longer need android.net.Uri import for this data class
+import com.google.firebase.firestore.GeoPoint
+
 
 data class Incident(
-    val id: String = System.currentTimeMillis().toString(), // Simple unique ID
-    val type: String,
-    val description: String,
-    val timestamp: Long = System.currentTimeMillis(),
-    var imageUrl: String? = null, // Will store the remote URL from Firebase Storage
-    val latitude: Double?,
-    val longitude: Double?
+    val id: String = "",
+    val type: String = "",
+    val description: String = "",
+    val timestamp: Long = 0,
+    val imageUrl: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val reporterName: String? = null, // Added to store the reporter's name
+    val locationString: String? = null // Added to store the manual location address
 )
