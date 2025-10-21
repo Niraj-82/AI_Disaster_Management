@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp">
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,27 +14,21 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tv_announcement_title"
-            android:layout_width="wrap_content"
+            android:id="@+id/announcement_message_text_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Announcement Title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            tools:text="This is a sample announcement message." />
 
         <TextView
-            android:id="@+id/tv_announcement_message"
+            android:id="@+id/announcement_timestamp_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginTop="8dp"
-            android:text="This is the announcement message." />
-
-        <TextView
-            android:id="@+id/tv_announcement_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Timestamp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            tools:text="2 hours ago" />
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

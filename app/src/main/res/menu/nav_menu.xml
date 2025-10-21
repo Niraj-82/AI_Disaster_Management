@@ -12,6 +12,14 @@
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_map"
             android:title="Map" />
+        <item
+            android:id="@+id/nav_view_shelters"
+            android:icon="@drawable/ic_view_shelter"
+            android:title="Find a Shelter" />
+        <item
+            android:id="@+id/nav_add_shelter"
+            android:icon="@drawable/ic_add_shelter"
+            android:title="Add Shelter (Admin)" />
     </group>
 
     <item android:title="">

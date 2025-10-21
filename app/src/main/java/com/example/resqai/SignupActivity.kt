@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.example.resqai.viewmodel.SignupViewModel
@@ -24,7 +23,6 @@ class SignupActivity : AppCompatActivity() {
     private lateinit var editTextPassword: TextInputEditText
     private lateinit var tilConfirmPassword: TextInputLayout
     private lateinit var editTextConfirmPassword: TextInputEditText
-    private lateinit var switchAdmin: SwitchMaterial
     private lateinit var tilAdminCode: TextInputLayout
     private lateinit var editTextAdminCode: TextInputEditText
     private lateinit var buttonSignup: MaterialButton
@@ -49,16 +47,11 @@ class SignupActivity : AppCompatActivity() {
         editTextPassword = findViewById(R.id.editTextSignupPassword)
         tilConfirmPassword = findViewById(R.id.tilSignupConfirmPassword)
         editTextConfirmPassword = findViewById(R.id.editTextSignupConfirmPassword)
-        switchAdmin = findViewById(R.id.switchAdminSignup)
         tilAdminCode = findViewById(R.id.tilAdminCode)
         editTextAdminCode = findViewById(R.id.editTextAdminCode)
         buttonSignup = findViewById(R.id.buttonSignup)
         textViewGoToLogin = findViewById(R.id.textViewGoToLogin)
         progressBar = findViewById(R.id.progressBarSignup)
-
-        switchAdmin.setOnCheckedChangeListener { _, isChecked ->
-            tilAdminCode.visibility = if (isChecked) View.VISIBLE else View.GONE
-        }
 
         buttonSignup.setOnClickListener {
             handleSignup()
@@ -100,7 +93,6 @@ class SignupActivity : AppCompatActivity() {
         val email = editTextEmail.text.toString().trim()
         val password = editTextPassword.text.toString().trim()
         val confirmPassword = editTextConfirmPassword.text.toString().trim()
-        val isAdmin = switchAdmin.isChecked
         val adminCode = editTextAdminCode.text.toString().trim()
 
         var isValid = true
@@ -135,23 +127,21 @@ class SignupActivity : AppCompatActivity() {
             tilConfirmPassword.error = null
         }
 
-        if (isAdmin) {
-            if (adminCode.isEmpty()) {
-                tilAdminCode.error = "Admin code is required"
-                isValid = false
-            } else if (adminCode != ADMIN_SIGNUP_CODE) {
+        val role = if (adminCode.isNotEmpty() && adminCode == ADMIN_SIGNUP_CODE) {
+            "admin"
+        } else {
+            if(adminCode.isNotEmpty()){
                 tilAdminCode.error = "Invalid admin code"
                 isValid = false
-            } else {
-                tilAdminCode.error = null
             }
+            "normal"
         }
 
         if (!isValid) {
             return
         }
 
-        val role = if (isAdmin) "admin" else "normal"
+
         signupViewModel.signupUser(email, password, role)
     }
 

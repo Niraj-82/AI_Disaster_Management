@@ -78,29 +78,20 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switchAdminSignup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign up as Administrator"
-                android:layout_marginBottom="8dp"/>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilAdminCode"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Admin Code"
+                android:hint="Admin Code (Optional)"
                 app:errorEnabled="true"
-                android:visibility="gone"
-                tools:visibility="visible"
                 android:layout_marginBottom="24dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editTextAdminCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberPassword" />
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

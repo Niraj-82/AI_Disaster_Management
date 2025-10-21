@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.resqai.model.Shelter
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class AdminShelterEditActivity : AppCompatActivity() {
 
@@ -75,7 +76,8 @@ class AdminShelterEditActivity : AppCompatActivity() {
                         etShelterAddress.setText(it.address)
                         etShelterCapacity.setText(it.capacity.toString())
                         etShelterCurrentOccupancy.setText(it.currentOccupancy.toString())
-                        etShelterSupplies.setText(it.supplies.joinToString(", "))
+                        // Safely handle nullable supplies list
+                        etShelterSupplies.setText(it.supplies?.joinToString(", ") ?: "")
                         etShelterContactInfo.setText(it.contactInfo)
                         etShelterLatitude.setText(it.latitude.toString())
                         etShelterLongitude.setText(it.longitude.toString())
@@ -101,12 +103,12 @@ class AdminShelterEditActivity : AppCompatActivity() {
 
         val name = etShelterName.text.toString().trim()
         val address = etShelterAddress.text.toString().trim()
-        val capacity = etShelterCapacity.text.toString().toIntOrNull() ?: 0
-        val currentOccupancy = etShelterCurrentOccupancy.text.toString().toIntOrNull() ?: 0
+        val capacity = etShelterCapacity.text.toString().toIntOrNull()
+        val currentOccupancy = etShelterCurrentOccupancy.text.toString().toIntOrNull()
         val supplies = etShelterSupplies.text.toString().split(",").map { it.trim() }.filter { it.isNotEmpty() }
         val contactInfo = etShelterContactInfo.text.toString().trim()
-        val latitude = etShelterLatitude.text.toString().toDoubleOrNull() ?: 0.0
-        val longitude = etShelterLongitude.text.toString().toDoubleOrNull() ?: 0.0
+        val latitude = etShelterLatitude.text.toString().toDoubleOrNull()
+        val longitude = etShelterLongitude.text.toString().toDoubleOrNull()
 
         val shelterDocRef = if (currentShelterId != null) {
             db.collection("shelters").document(currentShelterId!!)
@@ -123,7 +125,8 @@ class AdminShelterEditActivity : AppCompatActivity() {
             supplies = supplies,
             contactInfo = contactInfo,
             latitude = latitude,
-            longitude = longitude
+            longitude = longitude,
+            lastUpdated = Date() // Add a timestamp for consistency
         )
 
         shelterDocRef.set(shelter)
