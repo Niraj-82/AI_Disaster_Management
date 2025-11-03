@@ -58,6 +58,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(Intent(this, EmergencyContactsActivity::class.java))
         }
 
+        findViewById<CardView>(R.id.card_chatbot).setOnClickListener {
+            startActivity(Intent(this, ChatbotActivity::class.java))
+        }
+
         checkUserRole(navigationView)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {

@@ -14,9 +14,17 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/announcement_title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            tools:text="Announcement Title" />
+
+        <TextView
             android:id="@+id/announcement_message_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             tools:text="This is a sample announcement message." />
 

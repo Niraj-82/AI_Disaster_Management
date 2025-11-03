@@ -11,13 +11,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.resqai.db.DatabaseHelper
+import com.example.resqai.model.Announcement
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import java.util.Date
 
 class SOSActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var firestore: FirebaseFirestore
     private val PERMISSION_REQUEST_CODE = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +31,7 @@ class SOSActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         dbHelper = DatabaseHelper(this)
+        firestore = FirebaseFirestore.getInstance()
 
         val sosButton: Button = findViewById(R.id.button_sos)
         sosButton.setOnClickListener {
@@ -77,6 +83,7 @@ class SOSActivity : AppCompatActivity() {
                             messagesSent++
                         }
                         Toast.makeText(this, "SOS message sent to $messagesSent contact(s).", Toast.LENGTH_LONG).show()
+                        saveSosAsAnnouncement(location)
                     } catch (e: Exception) {
                         Toast.makeText(this, "Failed to send SOS message.", Toast.LENGTH_LONG).show()
                         e.printStackTrace()
@@ -87,6 +94,24 @@ class SOSActivity : AppCompatActivity() {
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to get location.", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun saveSosAsAnnouncement(location: Location) {
+        val announcement = Announcement(
+            title = "SOS Alert",
+            message = "A user has triggered an SOS alert.",
+            timestamp = Date().time,
+            location = GeoPoint(location.latitude, location.longitude)
+        )
+
+        firestore.collection("announcements")
+            .add(announcement)
+            .addOnSuccessListener {
+                // Optionally, confirm that the announcement was saved
+            }
+            .addOnFailureListener {
+                // Optionally, handle the failure to save the announcement
             }
     }
 

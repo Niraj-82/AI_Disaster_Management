@@ -23,8 +23,10 @@ class AnnouncementAdapter(private val announcements: List<Announcement>) :
         val announcement = announcements[position]
         holder.message.text = announcement.message
 
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        holder.timestamp.text = sdf.format(Date(announcement.timestamp))
+        announcement.timestamp?.let { timestamp ->
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            holder.timestamp.text = sdf.format(Date(timestamp))
+        }
     }
 
     override fun getItemCount(): Int {
