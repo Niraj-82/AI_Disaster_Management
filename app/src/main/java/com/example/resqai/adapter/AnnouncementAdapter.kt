@@ -21,7 +21,6 @@ class AnnouncementAdapter(private val announcements: List<Announcement>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val announcement = announcements[position]
-        holder.title.text = announcement.title
         holder.message.text = announcement.message
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
@@ -33,8 +32,7 @@ class AnnouncementAdapter(private val announcements: List<Announcement>) :
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.tv_announcement_title)
-        val message: TextView = itemView.findViewById(R.id.tv_announcement_message)
-        val timestamp: TextView = itemView.findViewById(R.id.tv_announcement_timestamp)
+        val message: TextView = itemView.findViewById(R.id.announcement_message_text_view)
+        val timestamp: TextView = itemView.findViewById(R.id.announcement_timestamp_text_view)
     }
 }

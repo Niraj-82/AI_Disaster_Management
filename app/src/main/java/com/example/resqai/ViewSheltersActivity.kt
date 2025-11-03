@@ -151,9 +151,7 @@ class ViewSheltersActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         db.collection("shelters").get().addOnSuccessListener { result ->
             val shelterList = result.documents.mapNotNull { document ->
-                val shelter = document.toObject(Shelter::class.java)
-                shelter?.id = document.id
-                shelter
+                document.toObject(Shelter::class.java)?.copy(id = document.id)
             }
 
             val availableShelters = shelterList.filter { it.status != "Full" }.toMutableList()

@@ -34,11 +34,11 @@ class SharedIncidentAdapter(private var incidents: List<Incident>) :
     }
 
     class IncidentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val incidentTypeTextView: TextView = itemView.findViewById(R.id.tv_incident_type)
-        private val incidentTimeTextView: TextView = itemView.findViewById(R.id.tv_incident_time)
-        private val incidentDescriptionTextView: TextView = itemView.findViewById(R.id.tv_incident_description)
-        private val incidentPhotoImageView: ImageView = itemView.findViewById(R.id.iv_incident_photo)
-        private val incidentLocationTextView: TextView = itemView.findViewById(R.id.tv_incident_location)
+        private val incidentTypeTextView: TextView = itemView.findViewById(R.id.textViewIncidentType)
+        private val incidentTimeTextView: TextView = itemView.findViewById(R.id.textViewIncidentTimestamp)
+        private val incidentDescriptionTextView: TextView = itemView.findViewById(R.id.textViewIncidentDescription)
+        private val incidentPhotoImageView: ImageView = itemView.findViewById(R.id.imageViewIncident)
+        private val incidentLocationTextView: TextView = itemView.findViewById(R.id.textViewIncidentLocation)
 
         fun bind(incident: Incident) {
             incidentTypeTextView.text = incident.type

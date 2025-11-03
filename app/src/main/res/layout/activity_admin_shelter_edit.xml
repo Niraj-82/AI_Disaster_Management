@@ -113,33 +113,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Latitude"
+            android:text="Location"
             android:textColor="@android:color/black"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        <EditText
-            android:id="@+id/etShelterLatitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="e.g., 34.0522"
-            android:textColorHint="@android:color/darker_gray"
-            android:textColor="@android:color/black"
-            android:inputType="numberDecimal|numberSigned"
-            android:layout_marginBottom="12dp"/>
 
-        <TextView
+        <Button
+            android:id="@+id/btnSelectLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Longitude"
-            android:textColor="@android:color/black"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        <EditText
-            android:id="@+id/etShelterLongitude"
-            android:layout_width="match_parent"
+            android:text="Select Location on Map"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/tvSelectedLocation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="e.g., -118.2437"
-            android:textColorHint="@android:color/darker_gray"
-            android:textColor="@android:color/black"
-            android:inputType="numberDecimal|numberSigned"
+            android:text="No location selected"
+            android:textColor="@android:color/darker_gray"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:layout_marginBottom="12dp"/>
 
         <TextView

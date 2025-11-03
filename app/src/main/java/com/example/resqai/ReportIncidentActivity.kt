@@ -12,12 +12,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.resqai.databinding.ActivityReportIncidentBinding
+import com.example.resqai.db.DatabaseHelper
 import com.example.resqai.model.Incident
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import java.util.Date
 import java.util.UUID
 
 class ReportIncidentActivity : AppCompatActivity() {
@@ -26,6 +25,7 @@ class ReportIncidentActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var currentLocation: Location? = null
     private var imageUri: Uri? = null
+    private lateinit var dbHelper: DatabaseHelper
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -50,6 +50,7 @@ class ReportIncidentActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        dbHelper = DatabaseHelper(this)
 
         setupToolbar()
         setupLocationRadioGroup()
@@ -152,25 +153,24 @@ class ReportIncidentActivity : AppCompatActivity() {
     }
 
     private fun saveIncident(incidentType: String, description: String, imageUrl: String?, reporterName: String, manualLocation: String) {
-        val db = FirebaseFirestore.getInstance()
-
         val incident = Incident(
-            id = UUID.randomUUID().toString(),
             type = incidentType,
             description = description,
             imageUrl = imageUrl,
-            timestamp = Date().time,
+            timestamp = System.currentTimeMillis(),
             latitude = if (binding.radioButtonCurrentLocation.isChecked) currentLocation?.latitude else null,
             longitude = if (binding.radioButtonCurrentLocation.isChecked) currentLocation?.longitude else null,
             locationString = if (binding.radioButtonManualLocation.isChecked) manualLocation else null,
             reporterName = reporterName.ifEmpty { null }
         )
 
-        db.collection("incidents").add(incident).addOnSuccessListener {
+        val id = dbHelper.addIncident(incident)
+
+        if (id != -1L) {
             Toast.makeText(this, "Report submitted successfully.", Toast.LENGTH_SHORT).show()
             finish()
-        }.addOnFailureListener { e ->
-            Toast.makeText(this, "Error submitting report: ${e.message}", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this, "Error submitting report.", Toast.LENGTH_LONG).show()
             binding.buttonSubmitIncident.isEnabled = true
         }
     }

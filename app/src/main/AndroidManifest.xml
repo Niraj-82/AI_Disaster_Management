@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
 
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -32,13 +34,17 @@
         <activity android:name=".FirstAidGuideActivity" />
         <activity android:name=".ReportIncidentActivity" />
         <activity android:name=".SharedIncidentsActivity" />
-        <activity android:name=".SosActivity" />
+        <activity android:name=".SOSActivity" />
         <activity android:name=".MedicalInfoActivity" />
         <activity android:name=".AnnouncementActivity" />
+        <activity android:name=".ViewIncidentsActivity" />
+        <activity android:name=".EmergencyContactsActivity" />
         <activity android:name=".ViewSheltersActivity" />
         <activity android:name=".AddShelterActivity"
             android:parentActivityName=".ViewSheltersActivity" />
         <activity android:name=".AdminShelterEditActivity" />
+        <activity android:name=".MapActivity" />
+        <activity android:name=".FindShelterActivity" />
     </application>
 
 </manifest>

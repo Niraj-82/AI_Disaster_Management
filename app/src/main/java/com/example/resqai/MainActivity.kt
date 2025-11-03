@@ -8,9 +8,9 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,9 +24,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         auth = FirebaseAuth.getInstance()
+        if (auth.currentUser == null) {
+            // Not logged in, redirect to LoginActivity and finish this activity
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return // Stop further execution of onCreate
+        }
+
+        // If the user is logged in, proceed to set up the main activity
+        setContentView(R.layout.activity_main)
+
         db = FirebaseFirestore.getInstance()
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
@@ -42,29 +51,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        setupAdminMenu()
-
-        // Correcting the findViewById typo.
-        val cardSos: MaterialCardView = findViewById(R.id.card_sos)
-        val cardMedicalInfo: MaterialCardView = findViewById(R.id.card_medical_info)
-        val cardAnnouncements: MaterialCardView = findViewById(R.id.card_announcements)
-        val cardViewIncidents: MaterialCardView = findViewById(R.id.card_view_incidents)
-
-        cardSos.setOnClickListener {
-            startActivity(Intent(this, SosActivity::class.java))
+        // Set up card listeners from the included activity_home layout
+        findViewById<CardView>(R.id.card_sos).setOnClickListener {
+            startActivity(Intent(this, SOSActivity::class.java))
         }
 
-        cardMedicalInfo.setOnClickListener {
+        findViewById<CardView>(R.id.card_medical_info).setOnClickListener {
             startActivity(Intent(this, MedicalInfoActivity::class.java))
         }
 
-        cardAnnouncements.setOnClickListener {
+        findViewById<CardView>(R.id.card_announcements).setOnClickListener {
             startActivity(Intent(this, AnnouncementActivity::class.java))
         }
-        
-        cardViewIncidents.setOnClickListener {
-            startActivity(Intent(this, SharedIncidentsActivity::class.java))
+
+        findViewById<CardView>(R.id.card_view_incidents).setOnClickListener {
+            startActivity(Intent(this, ViewIncidentsActivity::class.java))
         }
+
+        findViewById<CardView>(R.id.card_emergency_contacts).setOnClickListener {
+            startActivity(Intent(this, EmergencyContactsActivity::class.java))
+        }
+
+        setupAdminMenu()
+
 
         // Handle back press to close the navigation drawer
         onBackPressedDispatcher.addCallback(this) {
@@ -88,7 +97,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val user = auth.currentUser
         if (user == null) {
-            // Not logged in, ensure admin items are hidden
             return
         }
 
@@ -114,14 +122,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(Intent(this, ReportIncidentActivity::class.java))
             }
             R.id.nav_view_shelters -> {
-                startActivity(Intent(this, ViewSheltersActivity::class.java))
+                startActivity(Intent(this, FindShelterActivity::class.java))
             }
             R.id.nav_add_shelter -> {
                 startActivity(Intent(this, AddShelterActivity::class.java))
             }
             R.id.nav_map -> {
-                 // TODO: Create MapActivity
-                Toast.makeText(this, "Map feature coming soon!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, MapActivity::class.java))
             }
             R.id.nav_logout -> {
                 auth.signOut()

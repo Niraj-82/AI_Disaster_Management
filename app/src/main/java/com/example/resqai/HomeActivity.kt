@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -38,7 +39,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Set up card listeners from the included activity_home layout
         findViewById<CardView>(R.id.card_sos).setOnClickListener {
-            startActivity(Intent(this, SosActivity::class.java))
+            startActivity(Intent(this, SOSActivity::class.java))
         }
 
         findViewById<CardView>(R.id.card_medical_info).setOnClickListener {
@@ -50,10 +51,28 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         findViewById<CardView>(R.id.card_view_incidents).setOnClickListener {
-            startActivity(Intent(this, SharedIncidentsActivity::class.java))
+            startActivity(Intent(this, ViewIncidentsActivity::class.java))
+        }
+
+        findViewById<CardView>(R.id.card_emergency_contacts).setOnClickListener {
+            startActivity(Intent(this, EmergencyContactsActivity::class.java))
         }
 
         checkUserRole(navigationView)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                } else {
+                    // If the drawer is not open, perform the default back action
+                    if (isEnabled) {
+                        isEnabled = false
+                        onBackPressedDispatcher.onBackPressed()
+                    }
+                }
+            }
+        })
     }
 
     private fun checkUserRole(navigationView: NavigationView) {
@@ -101,6 +120,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_report_incident -> startActivity(Intent(this, ReportIncidentActivity::class.java))
             R.id.nav_view_shelters -> startActivity(Intent(this, ViewSheltersActivity::class.java))
             R.id.nav_add_shelter -> startActivity(Intent(this, AddShelterActivity::class.java))
+             R.id.nav_map -> {
+                startActivity(Intent(this, MapActivity::class.java))
+            }
             R.id.nav_logout -> {
                 FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, LoginActivity::class.java)
@@ -111,13 +133,5 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
     }
 }

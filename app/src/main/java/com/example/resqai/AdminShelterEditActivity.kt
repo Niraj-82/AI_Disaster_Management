@@ -1,10 +1,14 @@
 package com.example.resqai
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,13 +24,25 @@ class AdminShelterEditActivity : AppCompatActivity() {
     private lateinit var etShelterCurrentOccupancy: EditText
     private lateinit var etShelterSupplies: EditText
     private lateinit var etShelterContactInfo: EditText
-    private lateinit var etShelterLatitude: EditText
-    private lateinit var etShelterLongitude: EditText
+    private lateinit var btnSelectLocation: Button
+    private lateinit var tvSelectedLocation: TextView
     private lateinit var btnSaveShelter: Button
     private lateinit var btnDeleteShelter: Button
 
+    private var selectedLatitude: Double? = null
+    private var selectedLongitude: Double? = null
+
     private var currentShelterId: String? = null
     private lateinit var db: FirebaseFirestore
+
+    private val mapPickerLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            selectedLatitude = data?.getDoubleExtra("latitude", 0.0)
+            selectedLongitude = data?.getDoubleExtra("longitude", 0.0)
+            tvSelectedLocation.text = "Lat: $selectedLatitude, Lon: $selectedLongitude"
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +56,8 @@ class AdminShelterEditActivity : AppCompatActivity() {
         etShelterCurrentOccupancy = findViewById(R.id.etShelterCurrentOccupancy)
         etShelterSupplies = findViewById(R.id.etShelterSupplies)
         etShelterContactInfo = findViewById(R.id.etShelterContactInfo)
-        etShelterLatitude = findViewById(R.id.etShelterLatitude)
-        etShelterLongitude = findViewById(R.id.etShelterLongitude)
+        btnSelectLocation = findViewById(R.id.btnSelectLocation)
+        tvSelectedLocation = findViewById(R.id.tvSelectedLocation)
         btnSaveShelter = findViewById(R.id.btnSaveShelter)
         btnDeleteShelter = findViewById(R.id.btnDeleteShelter)
 
@@ -54,6 +70,11 @@ class AdminShelterEditActivity : AppCompatActivity() {
         } else {
             title = "Add New Shelter"
             btnDeleteShelter.visibility = View.GONE
+        }
+
+        btnSelectLocation.setOnClickListener {
+            val intent = Intent(this, MapPickerActivity::class.java)
+            mapPickerLauncher.launch(intent)
         }
 
         btnSaveShelter.setOnClickListener { saveShelter() }
@@ -76,11 +97,16 @@ class AdminShelterEditActivity : AppCompatActivity() {
                         etShelterAddress.setText(it.address)
                         etShelterCapacity.setText(it.capacity.toString())
                         etShelterCurrentOccupancy.setText(it.currentOccupancy.toString())
-                        // Safely handle nullable supplies list
-                        etShelterSupplies.setText(it.supplies?.joinToString(", ") ?: "")
+                        etShelterSupplies.setText(it.supplies)
                         etShelterContactInfo.setText(it.contactInfo)
-                        etShelterLatitude.setText(it.latitude.toString())
-                        etShelterLongitude.setText(it.longitude.toString())
+
+                        selectedLatitude = it.latitude
+                        selectedLongitude = it.longitude
+                        if (selectedLatitude != null && selectedLongitude != null) {
+                            tvSelectedLocation.text = "Lat: $selectedLatitude, Lon: $selectedLongitude"
+                        } else {
+                            tvSelectedLocation.text = "No location selected"
+                        }
                     }
                 } else {
                     Toast.makeText(this, "Shelter not found.", Toast.LENGTH_SHORT).show()
@@ -105,10 +131,15 @@ class AdminShelterEditActivity : AppCompatActivity() {
         val address = etShelterAddress.text.toString().trim()
         val capacity = etShelterCapacity.text.toString().toIntOrNull()
         val currentOccupancy = etShelterCurrentOccupancy.text.toString().toIntOrNull()
-        val supplies = etShelterSupplies.text.toString().split(",").map { it.trim() }.filter { it.isNotEmpty() }
+        val supplies = etShelterSupplies.text.toString().trim()
         val contactInfo = etShelterContactInfo.text.toString().trim()
-        val latitude = etShelterLatitude.text.toString().toDoubleOrNull()
-        val longitude = etShelterLongitude.text.toString().toDoubleOrNull()
+        val latitude = selectedLatitude
+        val longitude = selectedLongitude
+
+        if (latitude == null || longitude == null) {
+            Toast.makeText(this, "Please select a location on the map.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val shelterDocRef = if (currentShelterId != null) {
             db.collection("shelters").document(currentShelterId!!)
@@ -126,7 +157,7 @@ class AdminShelterEditActivity : AppCompatActivity() {
             contactInfo = contactInfo,
             latitude = latitude,
             longitude = longitude,
-            lastUpdated = Date() // Add a timestamp for consistency
+            lastUpdated = Date().toString()
         )
 
         shelterDocRef.set(shelter)

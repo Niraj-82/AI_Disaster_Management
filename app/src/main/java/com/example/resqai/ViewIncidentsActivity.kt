@@ -1,52 +1,48 @@
 package com.example.resqai
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.resqai.adapter.IncidentAdapter
-import com.example.resqai.model.IncidentReport
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.example.resqai.databinding.ActivityViewIncidentsBinding
+import com.example.resqai.db.DatabaseHelper
 
 class ViewIncidentsActivity : AppCompatActivity() {
 
-    private lateinit var db: FirebaseFirestore
-    private lateinit var incidentsRecyclerView: RecyclerView
+    private lateinit var binding: ActivityViewIncidentsBinding
+    private lateinit var dbHelper: DatabaseHelper
     private lateinit var incidentAdapter: IncidentAdapter
-    private var incidentList = mutableListOf<IncidentReport>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_incidents)
+        binding = ActivityViewIncidentsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        incidentsRecyclerView = findViewById(R.id.incidentsRecyclerView)
-        incidentsRecyclerView.layoutManager = LinearLayoutManager(this)
+        setupToolbar()
 
-        incidentAdapter = IncidentAdapter(incidentList)
-        incidentsRecyclerView.adapter = incidentAdapter
+        dbHelper = DatabaseHelper(this)
 
-        db = FirebaseFirestore.getInstance()
-
-        fetchIncidents()
+        setupRecyclerView()
+        loadIncidents()
     }
 
-    private fun fetchIncidents() {
-        db.collection("incidents")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                incidentList.clear()
-                for (document in result) {
-                    val incident = document.toObject(IncidentReport::class.java)
-                    incident.id = document.id // Store the document ID
-                    incidentList.add(incident)
-                }
-                incidentAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { exception ->
-                Log.w("ViewIncidentsActivity", "Error getting documents.", exception)
-            }
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbarViewIncidents)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.toolbarViewIncidents.setNavigationOnClickListener { 
+            onBackPressedDispatcher.onBackPressed() 
+        }
+    }
+
+    private fun setupRecyclerView() {
+        incidentAdapter = IncidentAdapter(emptyList()) // Start with an empty list
+        binding.recyclerViewIncidents.apply {
+            layoutManager = LinearLayoutManager(this@ViewIncidentsActivity)
+            adapter = incidentAdapter
+        }
+    }
+
+    private fun loadIncidents() {
+        val incidents = dbHelper.getAllIncidents()
+        incidentAdapter.updateData(incidents)
     }
 }

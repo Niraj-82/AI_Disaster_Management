@@ -10,20 +10,22 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.resqai.db.DatabaseHelper
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
-class SosActivity : AppCompatActivity() {
+class SOSActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var dbHelper: DatabaseHelper
     private val PERMISSION_REQUEST_CODE = 101
-    private val EMERGENCY_PHONE_NUMBER = "1234567890" // Replace with a real emergency contact
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sos)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        dbHelper = DatabaseHelper(this)
 
         val sosButton: Button = findViewById(R.id.button_sos)
         sosButton.setOnClickListener {
@@ -46,23 +48,35 @@ class SosActivity : AppCompatActivity() {
         if (permissionsToRequest.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, permissionsToRequest.toTypedArray(), PERMISSION_REQUEST_CODE)
         } else {
-            sendSosMessage()
+            sendSosMessageToContacts()
         }
     }
 
-    private fun sendSosMessage() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // This check is technically redundant due to the initial permission check, but good practice
+    private fun sendSosMessageToContacts() {
+        val emergencyContacts = dbHelper.getAllEmergencyContacts()
+
+        if (emergencyContacts.isEmpty()) {
+            Toast.makeText(this, "No emergency contacts found. Please add contacts first.", Toast.LENGTH_LONG).show()
             return
         }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // This check is technically redundant, but good practice
+            return
+        }
+
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val message = "SOS! I need help! My current location is: https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}"
                     try {
-                        val smsManager = SmsManager.getDefault()
-                        smsManager.sendTextMessage(EMERGENCY_PHONE_NUMBER, null, message, null, null)
-                        Toast.makeText(this, "SOS message sent to $EMERGENCY_PHONE_NUMBER", Toast.LENGTH_LONG).show()
+                        val smsManager = getSystemService(SmsManager::class.java)
+                        var messagesSent = 0
+                        for (contact in emergencyContacts) {
+                            smsManager.sendTextMessage(contact.phoneNumber, null, message, null, null)
+                            messagesSent++
+                        }
+                        Toast.makeText(this, "SOS message sent to $messagesSent contact(s).", Toast.LENGTH_LONG).show()
                     } catch (e: Exception) {
                         Toast.makeText(this, "Failed to send SOS message.", Toast.LENGTH_LONG).show()
                         e.printStackTrace()
@@ -88,7 +102,7 @@ class SosActivity : AppCompatActivity() {
             }
 
             if (allPermissionsGranted) {
-                sendSosMessage()
+                sendSosMessageToContacts()
             } else {
                 Toast.makeText(this, "Permissions denied. Cannot send SOS.", Toast.LENGTH_LONG).show()
             }
