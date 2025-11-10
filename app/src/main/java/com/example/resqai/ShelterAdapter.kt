@@ -13,7 +13,7 @@ import java.util.Locale
 class ShelterAdapter(
     private val shelters: List<Shelter>,
     var userLocation: Location?,
-    private val isAdmin: Boolean,
+    var isAdmin: Boolean,
     private val onItemClickListener: (Shelter) -> Unit
 ) : RecyclerView.Adapter<ShelterAdapter.ShelterViewHolder>() {
 

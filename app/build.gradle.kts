@@ -1,8 +1,18 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.services)
     id("kotlin-parcelize")
+}
+
+// Load properties from local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -17,6 +27,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Add the API key to BuildConfig, safely removing extra quotes
+        val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY", "").removeSurrounding("\"")
+        // Correctly escape the string for BuildConfig
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
     }
 
     buildTypes {
@@ -37,10 +52,21 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+    aaptOptions {
+        noCompress += ".tflite"
     }
 }
 
 dependencies {
+    // On-Device AI with TensorFlow Lite
+    implementation("org.tensorflow:tensorflow-lite-task-text:0.4.2")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.2")
+
+    // Google AI
+    implementation("com.google.ai.client.generativeai:generativeai:0.6.0")
+
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-firestore-ktx")

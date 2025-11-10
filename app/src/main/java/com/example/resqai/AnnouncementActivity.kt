@@ -3,7 +3,9 @@ package com.example.resqai
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -44,7 +46,9 @@ class AnnouncementActivity : AppCompatActivity() {
     private val auth by lazy { FirebaseAuth.getInstance() }
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 102
-    private val NOTIFICATION_CHANNEL_ID = "sos_alerts"
+    private val NOTIFICATION_PERMISSION_REQUEST_CODE = 103
+    private val SOS_CHANNEL_ID = "sos_alerts"
+    private val GENERAL_CHANNEL_ID = "general_announcements"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +63,21 @@ class AnnouncementActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        createNotificationChannel()
+        createNotificationChannels()
+        requestNotificationPermission()
         checkUserRole()
         checkLocationPermissionAndLoadAnnouncements()
 
         postAnnouncementButton.setOnClickListener {
             postAnnouncement()
+        }
+    }
+    
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), NOTIFICATION_PERMISSION_REQUEST_CODE)
+            }
         }
     }
 
@@ -122,8 +135,12 @@ class AnnouncementActivity : AppCompatActivity() {
                 snapshots?.documentChanges?.forEach { dc ->
                     if (dc.type == com.google.firebase.firestore.DocumentChange.Type.ADDED) {
                          val newAnnouncement = announcements.firstOrNull { it.id == dc.document.id }
-                        if (newAnnouncement?.title == "SOS Alert") {
-                            checkDistanceAndNotify(newAnnouncement)
+                        if (newAnnouncement != null) {
+                            if (newAnnouncement.title == "SOS Alert") {
+                                checkDistanceAndNotify(newAnnouncement)
+                            } else {
+                                sendNotification(newAnnouncement, isSos = false)
+                            }
                         }
                     }
                 }
@@ -144,37 +161,77 @@ class AnnouncementActivity : AppCompatActivity() {
                 }
 
                 val distance = userLocation.distanceTo(announcementLocation) // Distance in meters
-                if (distance <= 1000) { // 1km radius
-                    sendNotification(announcement)
+                if (distance <= 10000) { // 10km radius
+                    sendNotification(announcement, isSos = true)
                 }
             }
         }
     }
 
-    private fun sendNotification(announcement: Announcement) {
+    private fun sendNotification(announcement: Announcement, isSos: Boolean) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            Log.w("AnnouncementActivity", "Notification permission not granted, cannot send notification.")
+            return
+        }
+
+        val channelId = if (isSos) SOS_CHANNEL_ID else GENERAL_CHANNEL_ID
+        val icon = if (isSos) R.drawable.ic_sos else R.drawable.ic_launcher_foreground
+        val priority = if (isSos) NotificationCompat.PRIORITY_HIGH else NotificationCompat.PRIORITY_DEFAULT
+        
+        val intent: Intent
+        if (isSos && announcement.location != null) {
+            intent = Intent(this, IncidentsMapActivity::class.java).apply {
+                putExtra("latitude", announcement.location.latitude)
+                putExtra("longitude", announcement.location.longitude)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        } else {
+            intent = Intent(this, AnnouncementActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        }
+        
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            this,
+            (announcement.id ?: announcement.timestamp ?: Date().time).hashCode(),
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationId = (announcement.id ?: announcement.timestamp ?: Date().time).hashCode()
 
-        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_sos)
-            .setContentTitle(announcement.title ?: "SOS Alert")
-            .setContentText(announcement.message ?: "Someone needs help near you.")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(icon)
+            .setContentTitle(announcement.title ?: if (isSos) "SOS Alert" else "New Announcement")
+            .setContentText(announcement.message ?: if (isSos) "Someone needs help near you." else "Check the app for details.")
+            .setPriority(priority)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
             .build()
 
         notificationManager.notify(notificationId, notification)
     }
 
-    private fun createNotificationChannel() {
+    private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "SOS Alerts"
-            val descriptionText = "Notifications for SOS alerts from nearby users"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
             val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+
+            val sosChannelName = "SOS Alerts"
+            val sosDescriptionText = "Notifications for SOS alerts from nearby users"
+            val sosImportance = NotificationManager.IMPORTANCE_HIGH
+            val sosChannel = NotificationChannel(SOS_CHANNEL_ID, sosChannelName, sosImportance).apply {
+                description = sosDescriptionText
+            }
+            notificationManager.createNotificationChannel(sosChannel)
+
+            val generalChannelName = "General Announcements"
+            val generalDescriptionText = "Notifications for general announcements"
+            val generalImportance = NotificationManager.IMPORTANCE_DEFAULT
+            val generalChannel = NotificationChannel(GENERAL_CHANNEL_ID, generalChannelName, generalImportance).apply {
+                description = generalDescriptionText
+            }
+            notificationManager.createNotificationChannel(generalChannel)
         }
     }
 
@@ -199,12 +256,19 @@ class AnnouncementActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                loadAnnouncements()
-            } else {
-                Toast.makeText(this, "Location permission denied. Cannot check for nearby alerts.", Toast.LENGTH_LONG).show()
-                loadAnnouncements()
+        when (requestCode) {
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    loadAnnouncements()
+                } else {
+                    Toast.makeText(this, "Location permission denied. Cannot check for nearby alerts.", Toast.LENGTH_LONG).show()
+                    loadAnnouncements() 
+                }
+            }
+            NOTIFICATION_PERMISSION_REQUEST_CODE -> {
+                 if (!(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Toast.makeText(this, "Notification permission denied. You may miss important alerts.", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

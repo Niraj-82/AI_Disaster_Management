@@ -129,8 +129,8 @@ class AdminShelterEditActivity : AppCompatActivity() {
 
         val name = etShelterName.text.toString().trim()
         val address = etShelterAddress.text.toString().trim()
-        val capacity = etShelterCapacity.text.toString().toIntOrNull()
-        val currentOccupancy = etShelterCurrentOccupancy.text.toString().toIntOrNull()
+        val capacity = etShelterCapacity.text.toString().toLongOrNull()
+        val currentOccupancy = etShelterCurrentOccupancy.text.toString().toLongOrNull()
         val supplies = etShelterSupplies.text.toString().trim()
         val contactInfo = etShelterContactInfo.text.toString().trim()
         val latitude = selectedLatitude
@@ -157,7 +157,7 @@ class AdminShelterEditActivity : AppCompatActivity() {
             contactInfo = contactInfo,
             latitude = latitude,
             longitude = longitude,
-            lastUpdated = Date().toString()
+            lastUpdated = Date()
         )
 
         shelterDocRef.set(shelter)

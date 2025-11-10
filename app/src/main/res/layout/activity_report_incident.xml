@@ -141,14 +141,42 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Photo (Optional)"
-                android:layout_marginBottom="24dp"/>
+                android:text="Add Photo (Optional)"/>
+                
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonPredictSeverity"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Predict Severity"/>
+
+                <TextView
+                    android:id="@+id/textViewSeverityResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:textStyle="bold"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    tools:text="Severity: Medium"/>
+
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonSubmitIncident"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Submit Report"
+                android:layout_marginBottom="24dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"/>
 

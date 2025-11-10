@@ -11,12 +11,15 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.resqai.databinding.ActivityReportIncidentBinding
 import com.example.resqai.db.DatabaseHelper
 import com.example.resqai.model.Incident
+import com.google.ai.client.generativeai.GenerativeModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class ReportIncidentActivity : AppCompatActivity() {
@@ -26,6 +29,7 @@ class ReportIncidentActivity : AppCompatActivity() {
     private var currentLocation: Location? = null
     private var imageUri: Uri? = null
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var generativeModel: GenerativeModel
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -52,6 +56,7 @@ class ReportIncidentActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         dbHelper = DatabaseHelper(this)
 
+        initializeGenerativeModel()
         setupToolbar()
         setupLocationRadioGroup()
         setupButtons()
@@ -59,6 +64,14 @@ class ReportIncidentActivity : AppCompatActivity() {
         if (binding.radioButtonCurrentLocation.isChecked) {
             requestLocationPermission()
         }
+    }
+
+    private fun initializeGenerativeModel() {
+        // NOTE: Make sure you have your Gemini API key in local.properties
+        generativeModel = GenerativeModel(
+            modelName = "gemini-1.5-flash",
+            apiKey = BuildConfig.GEMINI_API_KEY
+        )
     }
 
     private fun setupToolbar() {
@@ -90,7 +103,54 @@ class ReportIncidentActivity : AppCompatActivity() {
         binding.buttonSubmitIncident.setOnClickListener {
             submitReport()
         }
+        
+        binding.buttonPredictSeverity.setOnClickListener {
+            predictSeverity()
+        }
     }
+    
+    private fun predictSeverity() {
+        val incidentType = binding.editTextIncidentType.text.toString().trim()
+        val description = binding.editTextDescription.text.toString().trim()
+
+        if (incidentType.isBlank() || description.isBlank()) {
+            Toast.makeText(this, "Please enter incident type and description first.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        binding.textViewSeverityResult.visibility = View.VISIBLE
+        binding.textViewSeverityResult.text = "Predicting..."
+
+        lifecycleScope.launch {
+            try {
+                val prompt = """
+                    Based on the following incident details, analyze the situation and predict the severity level.
+                    The output should be only one word: Low, Medium, or High.
+
+                    Incident Type: "$incidentType"
+                    Description: "$description"
+                """.trimIndent()
+
+                val response = generativeModel.generateContent(prompt)
+                
+                // Ensure the response is one of the expected values, with a fallback
+                val severity = response.text?.trim()?.let {
+                    if (it.equals("Low", ignoreCase = true) || it.equals("Medium", ignoreCase = true) || it.equals("High", ignoreCase = true)) {
+                        it
+                    } else {
+                        "Cannot determine"
+                    }
+                } ?: "Cannot determine"
+
+                binding.textViewSeverityResult.text = "Severity: $severity"
+
+            } catch (e: Exception) {
+                binding.textViewSeverityResult.text = "Error"
+                Toast.makeText(this@ReportIncidentActivity, "Error predicting severity: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 
     private fun requestLocationPermission() {
         when {
@@ -141,7 +201,7 @@ class ReportIncidentActivity : AppCompatActivity() {
         val storageRef = FirebaseStorage.getInstance().reference
         val imageRef = storageRef.child("images/${UUID.randomUUID()}.jpg")
         imageUri?.let {
-            imageRef.putFile(it).addOnSuccessListener { 
+            imageRef.putFile(it).addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
                     saveIncident(incidentType, description, uri.toString(), reporterName, manualLocation)
                 }

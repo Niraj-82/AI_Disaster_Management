@@ -39,44 +39,65 @@ class ViewSheltersActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        setupRecyclerView()
+        // This is now the single entry point for loading all data.
         checkUserRole()
-
-        val recyclerView: RecyclerView = findViewById(R.id.recycler_view_shelters)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        shelterAdapter = ShelterAdapter(shelters, userLocation, isAdmin) { shelter ->
-            if (isAdmin) {
-                showEditCapacityDialog(shelter)
-            }
-        }
-        recyclerView.adapter = shelterAdapter
 
         val fabAddShelter: FloatingActionButton = findViewById(R.id.fab_add_shelter)
         fabAddShelter.setOnClickListener {
             startActivity(Intent(this, AddShelterActivity::class.java))
         }
+    }
 
-        if (isAdmin) {
-            fabAddShelter.visibility = android.view.View.VISIBLE
-        }
+    override fun onResume() {
+        super.onResume()
+        // The logic is now handled by checkUserRole -> checkLocationPermissionAndFetch
+        // to prevent race conditions. If you need to refresh on resume,
+        // you would call checkUserRole() here again.
+    }
 
-        if (checkLocationPermission()) {
-            getCurrentLocationAndFetchShelters()
-        } else {
-            requestLocationPermission()
+    private fun setupRecyclerView() {
+        val recyclerView: RecyclerView = findViewById(R.id.recycler_view_shelters)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        shelterAdapter = ShelterAdapter(shelters, null, isAdmin) { shelter ->
+            if (isAdmin) {
+                showEditCapacityDialog(shelter)
+            }
         }
+        recyclerView.adapter = shelterAdapter
     }
 
     private fun checkUserRole() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            isAdmin = false
+            updateAdminUI()
+            checkLocationPermissionAndFetch() // Proceed for non-logged-in user
+            return
+        }
+
         val db = FirebaseFirestore.getInstance()
         db.collection("users").document(userId).get().addOnSuccessListener { document ->
-            if (document != null) {
-                val role = document.getString("role")
-                isAdmin = role == "admin"
-                shelterAdapter.notifyDataSetChanged() // Re-bind adapter with correct admin status
-            }
+            val role = document?.getString("role")
+            isAdmin = role == "admin"
+            updateAdminUI()
+            // Now that the role is confirmed, fetch location and shelters
+            checkLocationPermissionAndFetch()
+        }.addOnFailureListener {
+            isAdmin = false
+            updateAdminUI()
+            // Even on failure, proceed to show shelters
+            checkLocationPermissionAndFetch()
         }
     }
+
+    private fun updateAdminUI() {
+        shelterAdapter.isAdmin = isAdmin
+        val fabAddShelter: FloatingActionButton = findViewById(R.id.fab_add_shelter)
+        fabAddShelter.visibility = if (isAdmin) android.view.View.VISIBLE else android.view.View.GONE
+        // The adapter will be notified when the shelter list is ready
+    }
+
 
     private fun showEditCapacityDialog(shelter: Shelter) {
         val builder = AlertDialog.Builder(this)
@@ -114,11 +135,12 @@ class ViewSheltersActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkLocationPermission(): Boolean {
-        return ActivityCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+    private fun checkLocationPermissionAndFetch() {
+        if (checkLocationPermission()) {
+            getCurrentLocationAndFetchShelters()
+        } else {
+            requestLocationPermission()
+        }
     }
 
     private fun requestLocationPermission() {
@@ -130,22 +152,30 @@ class ViewSheltersActivity : AppCompatActivity() {
     }
 
     private fun getCurrentLocationAndFetchShelters() {
-        if (checkLocationPermission()) {
-            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                if (location != null) {
-                    userLocation = location
-                    shelterAdapter.userLocation = location
-                    fetchShelters()
-                } else {
-                    Toast.makeText(this, "Could not determine location. Showing all shelters.", Toast.LENGTH_SHORT).show()
-                    fetchShelters()
-                }
-            }.addOnFailureListener {
-                Toast.makeText(this, "Failed to get location.", Toast.LENGTH_SHORT).show()
-                fetchShelters()
-            }
+        if (!checkLocationPermission()) {
+            // A final safety check. If permission is still not granted, fetch without location.
+            fetchShelters()
+            return
+        }
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            userLocation = location // Can be null
+            shelterAdapter.userLocation = location // Update adapter's location
+            fetchShelters() // Now fetch shelters
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to get location. Showing unsorted list.", Toast.LENGTH_SHORT).show()
+            userLocation = null
+            shelterAdapter.userLocation = null
+            fetchShelters()
         }
     }
+    
+    private fun checkLocationPermission(): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
 
     private fun fetchShelters() {
         val db = FirebaseFirestore.getInstance()
@@ -156,17 +186,17 @@ class ViewSheltersActivity : AppCompatActivity() {
 
             val availableShelters = shelterList.filter { it.status != "Full" }.toMutableList()
 
-            if (userLocation != null) {
+            userLocation?.let { loc ->
                 availableShelters.sortBy { shelter ->
-                    if (shelter.latitude != null && shelter.longitude != null) {
-                        val shelterLocation = Location("").apply {
-                            latitude = shelter.latitude
-                            longitude = shelter.longitude
-                        }
-                        userLocation!!.distanceTo(shelterLocation)
-                    } else {
-                        Float.MAX_VALUE
-                    }
+                    shelter.latitude?.let { lat ->
+                        shelter.longitude?.let { lon ->
+                            val shelterLocation = Location("").apply {
+                                latitude = lat
+                                longitude = lon
+                            }
+                            loc.distanceTo(shelterLocation)
+                        } ?: Float.MAX_VALUE
+                    } ?: Float.MAX_VALUE
                 }
             }
 
@@ -190,14 +220,11 @@ class ViewSheltersActivity : AppCompatActivity() {
                 getCurrentLocationAndFetchShelters()
             } else {
                 Toast.makeText(this, "Permission denied. Cannot sort shelters by distance.", Toast.LENGTH_SHORT).show()
+                userLocation = null
+                shelterAdapter.userLocation = null
                 fetchShelters()
             }
         }
-    }
-    
-    override fun onResume() {
-        super.onResume()
-        fetchShelters()
     }
 
     companion object {

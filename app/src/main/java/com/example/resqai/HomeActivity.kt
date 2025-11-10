@@ -8,27 +8,31 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.cardview.widget.CardView
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
+import com.example.resqai.databinding.ActivityHomeBinding
+import com.example.resqai.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var mainBinding: ActivityMainBinding
+    private lateinit var homeBinding: ActivityHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main) // This layout includes the Nav Drawer and toolbar
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mainBinding.root)
 
-        drawerLayout = findViewById(R.id.drawer_layout)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        // Inflate the included layout and get its binding
+        homeBinding = ActivityHomeBinding.bind(mainBinding.root.findViewById(R.id.home_content_container))
+
+        val drawerLayout = mainBinding.drawerLayout
+        val toolbar = mainBinding.toolbar
         setSupportActionBar(toolbar)
 
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        val navigationView = mainBinding.navView
         navigationView.setNavigationItemSelectedListener(this)
 
         val toggle = ActionBarDrawerToggle(
@@ -37,30 +41,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Set up card listeners from the included activity_home layout
-        findViewById<CardView>(R.id.card_sos).setOnClickListener {
-            startActivity(Intent(this, SOSActivity::class.java))
-        }
-
-        findViewById<CardView>(R.id.card_medical_info).setOnClickListener {
-            startActivity(Intent(this, MedicalInfoActivity::class.java))
-        }
-
-        findViewById<CardView>(R.id.card_announcements).setOnClickListener {
-            startActivity(Intent(this, AnnouncementActivity::class.java))
-        }
-
-        findViewById<CardView>(R.id.card_view_incidents).setOnClickListener {
-            startActivity(Intent(this, ViewIncidentsActivity::class.java))
-        }
-
-        findViewById<CardView>(R.id.card_emergency_contacts).setOnClickListener {
-            startActivity(Intent(this, EmergencyContactsActivity::class.java))
-        }
-
-        findViewById<CardView>(R.id.card_chatbot).setOnClickListener {
-            startActivity(Intent(this, ChatbotActivity::class.java))
-        }
+        setupCardListeners()
 
         checkUserRole(navigationView)
 
@@ -69,7 +50,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
-                    // If the drawer is not open, perform the default back action
                     if (isEnabled) {
                         isEnabled = false
                         onBackPressedDispatcher.onBackPressed()
@@ -78,6 +58,33 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
     }
+
+    private fun setupCardListeners() {
+        homeBinding.cardSos.setOnClickListener {
+            startActivity(Intent(this, SOSActivity::class.java))
+        }
+
+        homeBinding.cardMedicalInfo.setOnClickListener {
+            startActivity(Intent(this, MedicalInfoActivity::class.java))
+        }
+
+        homeBinding.cardAnnouncements.setOnClickListener {
+            startActivity(Intent(this, AnnouncementActivity::class.java))
+        }
+
+        homeBinding.cardViewIncidents.setOnClickListener {
+            startActivity(Intent(this, ViewIncidentsActivity::class.java))
+        }
+
+        homeBinding.cardEmergencyContacts.setOnClickListener {
+            startActivity(Intent(this, EmergencyContactsActivity::class.java))
+        }
+
+        homeBinding.cardChatbot.setOnClickListener {
+            startActivity(Intent(this, ChatbotActivity::class.java))
+        }
+    }
+
 
     private fun checkUserRole(navigationView: NavigationView) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -103,16 +110,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateCardVisibility(isAdmin: Boolean) {
-        // Shared incidents should be visible to everyone, so we ensure it's always visible here.
-        findViewById<CardView>(R.id.card_view_incidents).visibility = View.VISIBLE
-        
-        // Announcements are also for everyone.
-        findViewById<CardView>(R.id.card_announcements).visibility = View.VISIBLE
+        homeBinding.cardViewIncidents.visibility = View.VISIBLE
+        homeBinding.cardAnnouncements.visibility = View.VISIBLE
     }
 
     private fun setAdminMenuVisibility(navigationView: NavigationView, isVisible: Boolean) {
         try {
-            // This correctly shows/hides the "Add Shelter" option in the navigation drawer for admins.
             navigationView.menu.findItem(R.id.nav_add_shelter).isVisible = isVisible
         } catch (e: Exception) {
             // Item not found, do nothing
@@ -135,7 +138,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 finish()
             }
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
+        mainBinding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
 }

@@ -30,7 +30,7 @@ class ResourceTrackerActivity : AppCompatActivity() {
                 currentOccupancy = 45,
                 supplies = "Water, Blankets, Canned Food",
                 contactInfo = "555-1234",
-                lastUpdated = Date().toString()
+                lastUpdated = Date()
             ),
             Shelter(
                 id = "2",
@@ -44,7 +44,7 @@ class ResourceTrackerActivity : AppCompatActivity() {
                 currentOccupancy = 90,
                 supplies = "Medical Kits, Baby Formula",
                 contactInfo = "555-5678",
-                lastUpdated = Date().toString()
+                lastUpdated = Date()
             ),
             Shelter(
                 id = "3",
@@ -58,7 +58,7 @@ class ResourceTrackerActivity : AppCompatActivity() {
                 currentOccupancy = 200,
                 supplies = "Water, Cots, Pet Food",
                 contactInfo = "555-9012",
-                lastUpdated = Date().toString()
+                lastUpdated = Date()
             )
         )
 
