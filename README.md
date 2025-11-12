@@ -34,7 +34,7 @@ The application leverages **Firebase Cloud**, **Google Maps APIs**, and **on-dev
    - Users can store medical details for quick access by responders.
 
 6. **AI and Machine Learning**
-   - (Future Enhancement) AI models for incident classification, alert prediction, and intelligent response optimization.
+   -  AI models for incident classification.
 
 ---
 
